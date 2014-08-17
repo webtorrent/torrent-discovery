@@ -34,6 +34,7 @@ Optional options are:
   dhtOpts: {},  // options to pass into DHT constructor
   tracker: true // use trackers?
 }
+```
 
 **This module automatically handles announcing to the DHT, for maximum peer discovery.**
 
