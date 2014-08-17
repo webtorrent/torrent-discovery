@@ -6,6 +6,15 @@ This module bundles the [bittorrent-dht](https://github.com/feross/bittorrent-dh
 [bittorrent-tracker](https://github.com/feross/bittorrent-tracker) modules and exposes
 a single API for discovering peers via both methods.
 
+This module is used by [WebTorrent](http://webtorrent.io).
+
+### features
+
+- simple API
+- find peers in the DHT and from trackers
+- automatically announces to the DHT and trackers
+- can start finding peers with just an info hash, before full metadata is available
+
 ### install
 
 ```
@@ -31,7 +40,6 @@ Optional options are:
 {
   announce: [], // force list of announce urls to use (from magnet uri)
   dht: true,    // use dht? also, can optionally pass in global DHT instance to use
-  dhtOpts: {},  // options to pass into DHT constructor
   tracker: true // use trackers?
 }
 ```
