@@ -1,0 +1,44 @@
+{
+  "name": "bittorrent-discovery",
+  "description": "Discover BitTorrent peers via DHT and Trackers",
+  "version": "0.0.0",
+  "author": {
+    "name": "Feross Aboukhadijeh",
+    "email": "feross@feross.org",
+    "url": "http://feross.org/"
+  },
+  "bugs": {
+    "url": "https://github.com/feross/bittorrent-discovery/issues"
+  },
+  "dependencies": {
+    "bittorrent-dht": "^2.1.0",
+    "bittorrent-tracker": "^2.5.0",
+    "debug": "^1.0.4",
+    "extend.js": "0.0.1",
+    "inherits": "^2.0.1"
+  },
+  "devDependencies": {},
+  "homepage": "http://webtorrent.io",
+  "keywords": [
+    "webtorrent",
+    "torrent",
+    "bittorrent",
+    "peers",
+    "discovery",
+    "tracker",
+    "dht",
+    "trackers",
+    "find peers",
+    "peer-to-peer",
+    "peer discovery"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/feross/bittorrent-discovery.git"
+  },
+  "scripts": {
+    "test": "echo \"no tests yet\""
+  }
+}
