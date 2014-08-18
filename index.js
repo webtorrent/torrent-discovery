@@ -5,6 +5,7 @@ var DHT = require('bittorrent-dht/client')
 var EventEmitter = require('events').EventEmitter
 var extend = require('extend.js')
 var inherits = require('inherits')
+var reemit = require('re-emitter')
 var Tracker = require('bittorrent-tracker/client')
 
 inherits(Discovery, EventEmitter)
@@ -65,30 +66,23 @@ Discovery.prototype.stop = function (cb) {
   else process.nextTick(function () { cb(null) })
 }
 
-Discovery.prototype._onPeer = function (addr) {
-  var self = this
-  self.emit('peer', addr)
-}
-
 Discovery.prototype._createDHT = function (port) {
   var self = this
-  if (self.dht === false) return
+  if (!self.dht) return
 
   if (self.dht) {
     self.externalDHT = true
+    reemit(self.dht, self, ['peer', 'error', 'warning'])
   } else {
     self.dht = new DHT()
-    self.dht.on('error', function (err) {
-      self.emit('error', err)
-    })
+    reemit(self.dht, self, ['peer', 'error', 'warning'])
     self.dht.listen(port)
   }
-  self.dht.on('peer', self._onPeer.bind(self))
 }
 
 Discovery.prototype._createTracker = function () {
   var self = this
-  if (self.tracker === false) return
+  if (!self.tracker) return
 
   var torrent = self.torrent || {
     infoHash: self.infoHash,
@@ -96,11 +90,7 @@ Discovery.prototype._createTracker = function () {
   }
 
   self.tracker = new Tracker(self.peerId, self.port, torrent)
-  self.tracker.on('peer', self._onPeer.bind(self))
-  self.tracker.on('error', function (err) {
-    // trackers are optional, so errors like an inaccessible tracker, etc. are not fatal
-    self.emit('warning', err)
-  })
+  reemit(self.tracker, self, ['peer', 'warning', 'error'])
   self.tracker.start()
 }
 
