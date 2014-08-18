@@ -71,12 +71,12 @@ Emitted whenever an `announce` message has been sent to the DHT.
 
 #### `discovery.on('warning', function (err) {})`
 
-Emitted whenever there is a tracker error. This is non-fatal.
+Emitted when there is a non-fatal DHT or tracker error, like an inaccessible tracker
+server. Useful for logging. This is non-fatal.
 
 #### `discovery.on('error', function (err) {})`
 
-Emitted if there is a fatal error. In practice, only happens if DNS lookup to the
-DHT bootstrap nodes fails.
+Emitted when there is a fatal, unrecoverable DHT or tracker error.
 
 ### license
 
