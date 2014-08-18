@@ -58,10 +58,11 @@ Discovery.prototype.setTorrent = function (torrent) {
   }
 }
 
-Discovery.prototype.stop = function () {
+Discovery.prototype.stop = function (cb) {
   var self = this
   if (self.tracker) self.tracker.stop()
-  if (self.dht && !self.externalDHT) self.dht.destroy()
+  if (self.dht && !self.externalDHT) self.dht.destroy(cb)
+  else process.nextTick(function () { cb(null) })
 }
 
 Discovery.prototype._onPeer = function (addr) {
