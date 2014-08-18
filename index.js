@@ -15,6 +15,8 @@ function Discovery (opts) {
   EventEmitter.call(self)
   if (!opts) opts = {}
 
+  self._performedDHTLookup = false
+
   extend(self, {
     announce: [],
     dht: true,
@@ -36,6 +38,9 @@ Discovery.prototype._onPeer = function (addr) {
 
 Discovery.prototype._dhtLookupAndAnnounce = function () {
   var self = this
+  if (self._performedDHTLookup) return
+  self._performedDHTLookup = true
+
   debug('lookup')
   self.dht.lookup(self.infoHash, function (err) {
     if (err || !self.port) return
@@ -82,16 +87,16 @@ Discovery.prototype._createTracker = function () {
 
 Discovery.prototype.setTorrent = function (torrent) {
   var self = this
-  debug('setTorrent %s', torrent)
+  if (self.torrent) return
 
   if (torrent && torrent.infoHash) {
-    if (self.torrent) return
     self.torrent = torrent
     self.infoHash = torrent.infoHash
   } else {
     if (self.infoHash) return
     self.infoHash = torrent
   }
+  debug('setTorrent %s', torrent)
 
   if (self.tracker && self.tracker !== true) {
     // If tracker exists, then it was created with just infoHash. Set torrent length
