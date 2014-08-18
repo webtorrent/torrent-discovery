@@ -60,8 +60,8 @@ Discovery.prototype.setTorrent = function (torrent) {
 
 Discovery.prototype.stop = function (cb) {
   var self = this
-  if (self.tracker) self.tracker.stop()
-  if (self.dht && !self.externalDHT) self.dht.destroy(cb)
+  if (self.tracker && self.tracker.stop) self.tracker.stop()
+  if (!self.externalDHT && self.dht && self.dht.destroy) self.dht.destroy(cb)
   else process.nextTick(function () { cb(null) })
 }
 
