@@ -1,7 +1,7 @@
 {
   "name": "bittorrent-discovery",
   "description": "Discover BitTorrent peers via DHT and Trackers",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "author": {
     "name": "Feross Aboukhadijeh",
     "email": "feross@feross.org",
