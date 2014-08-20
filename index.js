@@ -1,12 +1,12 @@
 module.exports = Discovery
 
 var debug = require('debug')('torrent-discovery')
-var DHT = require('bittorrent-dht/client')
+var DHT = require('bittorrent-dht/client') // empty object in browser
 var EventEmitter = require('events').EventEmitter
 var extend = require('extend.js')
 var inherits = require('inherits')
 var reemit = require('re-emitter')
-var Tracker = require('bittorrent-tracker/client')
+var Tracker = require('bittorrent-tracker/client') // `webtorrent-tracker` in browser
 
 inherits(Discovery, EventEmitter)
 
@@ -20,14 +20,14 @@ function Discovery (opts) {
 
   extend(self, {
     announce: [],
-    dht: true,
+    dht: (typeof DHT === 'function'),
     externalDHT: false,
     tracker: true,
     port: null // torrent port
   }, opts)
 
   if (!self.peerId) throw new Error('peerId required')
-  if (!self.port) throw new Error('port required')
+  if (!self.port && !process.browser) throw new Error('port required')
 
   self._createDHT(opts.dhtPort)
 }
@@ -89,7 +89,9 @@ Discovery.prototype._createTracker = function () {
     announce: self.announce
   }
 
-  self.tracker = new Tracker(self.peerId, self.port, torrent)
+  if (process.browser) self.tracker = new Tracker(self.peerId, torrent)
+  else self.tracker = new Tracker(self.peerId, self.port, torrent)
+
   reemit(self.tracker, self, ['peer', 'warning', 'error'])
   self.tracker.start()
 }
