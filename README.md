@@ -33,7 +33,7 @@ Create a new peer discovery instance. Required options are:
 ```
 {
   peerId: '', // as utf8 string or Buffer
-  port: 0     // torrent client port
+  port: 0     // torrent client port (only required in node)
 }
 ```
 
