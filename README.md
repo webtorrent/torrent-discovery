@@ -1,12 +1,15 @@
-# bittorrent-discovery [![npm](https://img.shields.io/npm/v/bittorrent-discovery.svg)](https://npmjs.org/package/bittorrent-discovery) [![gittip](https://img.shields.io/gittip/feross.svg)](https://www.gittip.com/feross/)
+# torrent-discovery [![npm](https://img.shields.io/npm/v/torrent-discovery.svg)](https://npmjs.org/package/torrent-discovery) [![gittip](https://img.shields.io/gittip/feross.svg)](https://www.gittip.com/feross/)
 
-### Discover BitTorrent peers via DHT and Trackers
+### Discover BitTorrent and WebTorrent peers via DHT and Trackers
 
-This module bundles the [bittorrent-dht](https://github.com/feross/bittorrent-dht) and
-[bittorrent-tracker](https://github.com/feross/bittorrent-tracker) modules and exposes
-a single API for discovering peers via both methods.
+This module bundles [bittorrent-dht](https://github.com/feross/bittorrent-dht) and
+[bittorrent-tracker](https://github.com/feross/bittorrent-tracker) clients and exposes a
+single API for discovering BitTorrent peers via both discovery methods.
 
-This module is used by [WebTorrent](http://webtorrent.io).
+This module **works in the browser** with [browserify](http://browserify.org) and, in
+that context, it uses [webtorrent-dht](https://github.com/feross/webtorrent-dht) (TODO!) and
+[webtorrent-tracker](https://github.com/feross/webtorrent-tracker) clients to discover
+[WebTorrent](http://webtorrent.io) (WebRTC) peers.
 
 ### features
 
@@ -18,7 +21,7 @@ This module is used by [WebTorrent](http://webtorrent.io).
 ### install
 
 ```
-npm install bittorrent-discovery
+npm install torrent-discovery
 ```
 
 ### api
@@ -60,10 +63,15 @@ Destroy and cleanup the DHT and tracker instances.
 
 ### events
 
-#### `discovery.on('peer', function (addr) {})`
+#### `discovery.on('peer', function (peer) {})`
 
-Emitted whenever a new peer is discovered. `addr` is a string in the form
-`12:34:56:78:4000`.
+Emitted whenever a new peer is discovered.
+
+**In node**, `peer` is a string in the form `12:34:56:78:4000`.
+
+**In the browser**, `peer` is an instance of
+[`simple-peer`](https://github.com/feross/simple-peer), a small wrapper around a WebRTC
+peer connection.
 
 #### `discovery.on('dhtAnnounce', function () {}`
 

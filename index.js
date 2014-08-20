@@ -1,6 +1,6 @@
 module.exports = Discovery
 
-var debug = require('debug')('bittorrent-discovery')
+var debug = require('debug')('torrent-discovery')
 var DHT = require('bittorrent-dht/client')
 var EventEmitter = require('events').EventEmitter
 var extend = require('extend.js')
