@@ -1,22 +1,22 @@
 # torrent-discovery [![npm](https://img.shields.io/npm/v/torrent-discovery.svg)](https://npmjs.org/package/torrent-discovery) [![gittip](https://img.shields.io/gittip/feross.svg)](https://www.gittip.com/feross/)
 
-### Discover BitTorrent and WebTorrent peers via DHT and Trackers
+### Discover BitTorrent and WebTorrent peers
 
 This module bundles [bittorrent-dht](https://github.com/feross/bittorrent-dht) and
 [bittorrent-tracker](https://github.com/feross/bittorrent-tracker) clients and exposes a
 single API for discovering BitTorrent peers via both discovery methods.
 
-This module **works in the browser** with [browserify](http://browserify.org) and, in
-that context, it uses [webtorrent-dht](https://github.com/feross/webtorrent-dht) (TODO!) and
-[webtorrent-tracker](https://github.com/feross/webtorrent-tracker) clients to discover
-[WebTorrent](http://webtorrent.io) (WebRTC) peers.
-
 ### features
 
 - simple API
-- find peers in the DHT and from trackers
-- automatically announces to the DHT and trackers
+- find peers from trackers and the DHT
+- automatically announces, so other peers can discover us
 - can start finding peers with just an info hash, before full metadata is available
+
+This module also **works in the browser** with [browserify](http://browserify.org). In
+that context, it uses [webtorrent-dht](https://github.com/feross/webtorrent-dht) (TODO!) and
+[webtorrent-tracker](https://github.com/feross/webtorrent-tracker) clients to discover
+[WebTorrent](http://webtorrent.io) (WebRTC) peers.
 
 ### install
 
