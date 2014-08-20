@@ -8,7 +8,7 @@
     "url": "http://feross.org/"
   },
   "browser": {
-    "bittorrent-dht": false,
+    "bittorrent-dht/client": false,
     "bittorrent-tracker/client": "webtorrent-tracker/client"
   },
   "bugs": {
