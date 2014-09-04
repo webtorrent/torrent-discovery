@@ -45,13 +45,12 @@ Discovery.prototype.setTorrent = function (torrent) {
   }
   debug('setTorrent %s', torrent)
 
-  if (self.tracker && self.tracker !== true) {
-    // If tracker exists, then it was created with just infoHash. Set torrent length
-    // so client can report correct information about uploads.
+  // If tracker exists, then it was created with just infoHash. Set torrent length
+  // so client can report correct information about uploads.
+  if (self.tracker && self.tracker !== true)
     self.tracker.torrentLength = torrent.length
-  } else {
+  else
     self._createTracker()
-  }
 
   if (self.dht) {
     if (self.dht.ready) self._dhtLookupAndAnnounce()
@@ -70,14 +69,12 @@ Discovery.prototype._createDHT = function (port) {
   var self = this
   if (!self.dht) return
 
-  if (self.dht) {
-    self.externalDHT = true
-    reemit(self.dht, self, ['peer', 'error', 'warning'])
-  } else {
-    self.dht = new DHT()
-    reemit(self.dht, self, ['peer', 'error', 'warning'])
-    self.dht.listen(port)
-  }
+  if (self.dht) self.externalDHT = true
+  else self.dht = new DHT()
+
+  reemit(self.dht, self, ['peer', 'error', 'warning'])
+
+  if (!self.externalDHT) self.dht.listen(port)
 }
 
 Discovery.prototype._createTracker = function () {
@@ -89,8 +86,9 @@ Discovery.prototype._createTracker = function () {
     announce: self.announce
   }
 
-  if (process.browser) self.tracker = new Tracker(self.peerId, torrent)
-  else self.tracker = new Tracker(self.peerId, self.port, torrent)
+  self.tracker = process.browser
+    ? new Tracker(self.peerId, torrent)
+    : new Tracker(self.peerId, self.port, torrent)
 
   reemit(self.tracker, self, ['peer', 'warning', 'error'])
   self.tracker.start()
