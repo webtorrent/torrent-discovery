@@ -21,7 +21,7 @@
     "extend.js": "0.0.1",
     "inherits": "^2.0.1",
     "re-emitter": "^1.0.0",
-    "webtorrent-tracker": "^0.2.6"
+    "webtorrent-tracker": "0.x"
   },
   "devDependencies": {},
   "homepage": "http://webtorrent.io",
