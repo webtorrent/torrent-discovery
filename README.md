@@ -73,7 +73,7 @@ Emitted whenever a new peer is discovered.
 [`simple-peer`](https://github.com/feross/simple-peer), a small wrapper around a WebRTC
 peer connection.
 
-#### `discovery.on('dhtAnnounce', function () {}`
+#### `discovery.on('dhtAnnounce', function () {})`
 
 Emitted whenever an `announce` message has been sent to the DHT.
 
