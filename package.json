@@ -18,7 +18,7 @@
     "bittorrent-dht": "^2.1.0",
     "bittorrent-tracker": "^2.5.0",
     "debug": "^2.0.0",
-    "extend.js": "0.0.1",
+    "extend.js": "0.0.2",
     "inherits": "^2.0.1",
     "re-emitter": "^1.0.0",
     "webtorrent-tracker": "0.x"
