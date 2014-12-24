@@ -26,6 +26,8 @@ function Discovery (opts) {
     port: null // torrent port
   }, opts)
 
+  if (process.browser && (!self.announce || self.announce.length === 0))
+    throw new Error('specify a tracker server to discover peers (you can use wss://tracker.webtorrent.io) (required in browser because DHT is unimplemented)')
   if (!self.peerId) throw new Error('peerId required')
   if (!self.port && !process.browser) throw new Error('port required')
 
