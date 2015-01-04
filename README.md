@@ -41,9 +41,10 @@ Optional options are:
 
 ```
 {
-  announce: [], // force list of announce urls to use (from magnet uri)
-  dht: true,    // use dht? also, can optionally pass in global DHT instance to use
-  tracker: true // use trackers?
+  announce: [],  // force list of announce urls to use (from magnet uri)
+  dht: true,     // use dht? also, can optionally pass in global DHT instance to use
+  tracker: true, // use trackers?
+  rtcConfig: {}  // RTCPeerConnection config object (only used in browser)
 }
 ```
 
