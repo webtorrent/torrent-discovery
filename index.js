@@ -14,25 +14,25 @@ function Discovery (opts) {
   var self = this
   if (!(self instanceof Discovery)) return new Discovery(opts)
   EventEmitter.call(self)
-  if (!opts) opts = {}
-
-  self._performedDHTLookup = false
 
   extend(self, {
     announce: [],
     dht: (typeof DHT === 'function'),
-    externalDHT: false,
-    tracker: true,
-    port: null // torrent port
     rtcConfig: null, // browser only
+    peerId: null,
+    port: 0, // torrent port
+    tracker: true
   }, opts)
 
+  if (!self.peerId) throw new Error('peerId required')
+  if (!process.browser && !self.port) throw new Error('port required')
   if (process.browser && (!self.announce || self.announce.length === 0))
     console.warn('Warning: must specify a tracker server to discover peers (required in browser because DHT is not implemented yet) (you can use wss://tracker.webtorrent.io)')
-  if (!self.peerId) throw new Error('peerId required')
-  if (!self.port && !process.browser) throw new Error('port required')
 
-  self._createDHT(opts.dhtPort)
+  self._externalDHT = false
+  self._performedDHTLookup = false
+
+  self._createDHT(self.dhtPort)
 }
 
 Discovery.prototype.setTorrent = function (torrent) {
@@ -64,7 +64,7 @@ Discovery.prototype.setTorrent = function (torrent) {
 Discovery.prototype.stop = function (cb) {
   var self = this
   if (self.tracker && self.tracker.stop) self.tracker.stop()
-  if (!self.externalDHT && self.dht && self.dht.destroy) self.dht.destroy(cb)
+  if (!self._externalDHT && self.dht && self.dht.destroy) self.dht.destroy(cb)
   else process.nextTick(function () { cb(null) })
 }
 
@@ -72,12 +72,12 @@ Discovery.prototype._createDHT = function (port) {
   var self = this
   if (!self.dht) return
 
-  if (self.dht) self.externalDHT = true
+  if (self.dht) self._externalDHT = true
   else self.dht = new DHT()
 
   reemit(self.dht, self, ['peer', 'error', 'warning'])
 
-  if (!self.externalDHT) self.dht.listen(port)
+  if (!self._externalDHT) self.dht.listen(port)
 }
 
 Discovery.prototype._createTracker = function () {
