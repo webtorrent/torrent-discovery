@@ -24,6 +24,7 @@ function Discovery (opts) {
     externalDHT: false,
     tracker: true,
     port: null // torrent port
+    rtcConfig: null, // browser only
   }, opts)
 
   if (process.browser && (!self.announce || self.announce.length === 0))
@@ -89,7 +90,7 @@ Discovery.prototype._createTracker = function () {
   }
 
   self.tracker = process.browser
-    ? new Tracker(self.peerId, torrent)
+    ? new Tracker(self.peerId, torrent, { rtcConfig: self.rtcConfig })
     : new Tracker(self.peerId, self.port, torrent)
 
   reemit(self.tracker, self, ['peer', 'warning', 'error'])
