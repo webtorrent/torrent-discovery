@@ -23,7 +23,10 @@
     "webtorrent-tracker": "0.x",
     "xtend": "^4.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "hat": "0.0.3",
+    "tape": "^3.5.0"
+  },
   "homepage": "http://webtorrent.io",
   "keywords": [
     "webtorrent",
@@ -45,6 +48,6 @@
     "url": "git://github.com/feross/torrent-discovery.git"
   },
   "scripts": {
-    "test": "echo \"no tests yet\""
+    "test": "tape test/*.js"
   }
 }
