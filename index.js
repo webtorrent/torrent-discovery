@@ -17,22 +17,22 @@ function Discovery (opts) {
 
   extend(self, {
     announce: [],
-    dht: (typeof DHT === 'function'),
+    dht: typeof DHT === 'function',
     rtcConfig: null, // browser only
     peerId: null,
     port: 0, // torrent port
     tracker: true
   }, opts)
 
+  self._externalDHT = typeof self.dht === 'object'
+  self._performedDHTLookup = false
+
   if (!self.peerId) throw new Error('peerId required')
   if (!process.browser && !self.port) throw new Error('port required')
   if (process.browser && (!self.announce || self.announce.length === 0))
     console.warn('Warning: must specify a tracker server to discover peers (required in browser because DHT is not implemented yet) (you can use wss://tracker.webtorrent.io)')
 
-  self._externalDHT = false
-  self._performedDHTLookup = false
-
-  self._createDHT(self.dhtPort)
+  if (self.dht) self._createDHT(self.dhtPort)
 }
 
 Discovery.prototype.setTorrent = function (torrent) {
@@ -70,13 +70,8 @@ Discovery.prototype.stop = function (cb) {
 
 Discovery.prototype._createDHT = function (port) {
   var self = this
-  if (!self.dht) return
-
-  if (self.dht) self._externalDHT = true
-  else self.dht = new DHT()
-
+  if (!self._externalDHT) self.dht = new DHT()
   reemit(self.dht, self, ['peer', 'error', 'warning'])
-
   if (!self._externalDHT) self.dht.listen(port)
 }
 
