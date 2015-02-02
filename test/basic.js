@@ -6,7 +6,7 @@ var test = require('tape')
 test('initialize with dht', function (t) {
   var dht = new DHT()
   var discovery = new Discovery({
-    peerId: hat(20),
+    peerId: hat(160),
     port: 6000,
     dht: dht
   })
@@ -19,7 +19,7 @@ test('initialize with dht', function (t) {
 
 test('initialize with default dht', function (t) {
   var discovery = new Discovery({
-    peerId: hat(20),
+    peerId: hat(160),
     port: 6000
   })
   discovery.stop(function () {
@@ -29,7 +29,7 @@ test('initialize with default dht', function (t) {
 
 test('initialize without dht', function (t) {
   var discovery = new Discovery({
-    peerId: hat(20),
+    peerId: hat(160),
     port: 6000,
     dht: false
   })
