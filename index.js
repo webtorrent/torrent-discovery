@@ -71,7 +71,10 @@ Discovery.prototype.stop = function (cb) {
 Discovery.prototype._createDHT = function (port) {
   var self = this
   if (!self._externalDHT) self.dht = new DHT()
-  reemit(self.dht, self, ['peer', 'error', 'warning'])
+  reemit(self.dht, self, ['error', 'warning'])
+  self.dht.on('peer', function (addr, infoHash) {
+    if (infoHash === self.infoHash) self.emit('peer', addr)
+  })
   if (!self._externalDHT) self.dht.listen(port)
 }
 
