@@ -100,11 +100,12 @@ Discovery.prototype._dhtLookupAndAnnounce = function () {
   if (self._performedDHTLookup) return
   self._performedDHTLookup = true
 
-  debug('lookup')
+  debug('dht lookup')
   self.dht.lookup(self.infoHash, function (err) {
     if (err || !self.port) return
-    debug('dhtAnnounce')
+    debug('dht announce')
     self.dht.announce(self.infoHash, self.port, function () {
+      debug('dht announce complete')
       self.emit('dhtAnnounce')
     })
   })
