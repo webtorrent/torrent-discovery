@@ -29,8 +29,13 @@ function Discovery (opts) {
 
   if (!self.peerId) throw new Error('peerId required')
   if (!process.browser && !self.port) throw new Error('port required')
-  if (process.browser && (!self.announce || self.announce.length === 0))
-    console.warn('Warning: must specify a tracker server to discover peers (required in browser because DHT is not implemented yet) (you can use wss://tracker.webtorrent.io)')
+  if (process.browser && (!self.announce || self.announce.length === 0)) {
+    console.warn(
+      'Warning: specify a tracker server to discover peers. ' +
+      'Required in browser because DHT is not implemented yet. ' +
+      '(You can use wss://tracker.webtorrent.io.)'
+    )
+  }
 
   if (self.dht) self._createDHT(self.dhtPort)
 }
@@ -50,10 +55,11 @@ Discovery.prototype.setTorrent = function (torrent) {
 
   // If tracker exists, then it was created with just infoHash. Set torrent length
   // so client can report correct information about uploads.
-  if (self.tracker && self.tracker !== true)
+  if (self.tracker && self.tracker !== true) {
     self.tracker.torrentLength = torrent.length
-  else
+  } else {
     self._createTracker()
+  }
 
   if (self.dht) {
     if (self.dht.ready) self._dhtLookupAndAnnounce()
