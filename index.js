@@ -51,7 +51,7 @@ Discovery.prototype.setTorrent = function (torrent) {
     if (self.infoHash) return
     self.infoHash = torrent
   }
-  debug('setTorrent %s', torrent)
+  debug('setTorrent %s', self.infoHash)
 
   // If tracker exists, then it was created with just infoHash. Set torrent length
   // so client can report correct information about uploads.
