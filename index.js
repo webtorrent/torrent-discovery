@@ -6,7 +6,7 @@ var EventEmitter = require('events').EventEmitter
 var extend = require('xtend/mutable')
 var inherits = require('inherits')
 var reemit = require('re-emitter')
-var Tracker = require('bittorrent-tracker/client') // `webtorrent-tracker` in browser
+var Tracker = require('bittorrent-tracker/client')
 
 inherits(Discovery, EventEmitter)
 
@@ -93,9 +93,11 @@ Discovery.prototype._createTracker = function () {
     announce: self.announce
   }
 
-  self.tracker = process.browser
-    ? new Tracker(self.peerId, torrent, { rtcConfig: self.rtcConfig })
-    : new Tracker(self.peerId, self.port, torrent)
+  var trackerOpts = {
+    rtcConfig: self.rtcConfig
+  }
+
+  self.tracker = new Tracker(self.peerId, self.port, torrent, trackerOpts)
 
   reemit(self.tracker, self, ['peer', 'warning', 'error'])
   self.tracker.start()

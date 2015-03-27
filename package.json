@@ -8,19 +8,17 @@
     "url": "http://feross.org/"
   },
   "browser": {
-    "bittorrent-dht/client": false,
-    "bittorrent-tracker/client": "webtorrent-tracker/client"
+    "bittorrent-dht/client": false
   },
   "bugs": {
     "url": "https://github.com/feross/torrent-discovery/issues"
   },
   "dependencies": {
     "bittorrent-dht": "^3.0.0",
-    "bittorrent-tracker": "^3.1.2",
+    "bittorrent-tracker": "^3.3.0",
     "debug": "^2.0.0",
     "inherits": "^2.0.1",
     "re-emitter": "^1.0.0",
-    "webtorrent-tracker": "0.x",
     "xtend": "^4.0.0"
   },
   "devDependencies": {
