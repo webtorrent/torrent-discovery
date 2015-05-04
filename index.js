@@ -29,10 +29,6 @@ function Discovery (opts) {
 
   if (!self.peerId) throw new Error('peerId required')
   if (!process.browser && !self.port) throw new Error('port required')
-  if (process.browser && (!self.announce || self.announce.length === 0)) {
-    // If no trackers specified in browser, use default so WebTorrent Just Works(TM).
-    self.announce = [ 'wss://tracker.webtorrent.io' ]
-  }
 
   if (self.dht) self._createDHT(self.dhtPort)
 }
