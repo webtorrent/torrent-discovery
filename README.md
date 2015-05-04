@@ -51,7 +51,8 @@ Optional options are:
   announce: [],  // force list of announce urls to use (from magnet uri)
   dht: true,     // use dht? also, can optionally pass in global DHT instance to use
   tracker: true, // use trackers?
-  rtcConfig: {}  // RTCPeerConnection config object (only used in browser)
+  rtcConfig: {}, // RTCPeerConnection config object (only used in browser)
+  wrtc: {}       // custom webrtc implementation, mainly useful in node to specify in the [wrtc](https://npmjs.com/package/wrtc) package
 }
 ```
 

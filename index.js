@@ -21,7 +21,8 @@ function Discovery (opts) {
     rtcConfig: null, // browser only
     peerId: null,
     port: 0, // torrent port
-    tracker: true
+    tracker: true,
+    wrtc: null
   }, opts)
 
   self._externalDHT = typeof self.dht === 'object'
@@ -87,7 +88,8 @@ Discovery.prototype._createTracker = function () {
   }
 
   var trackerOpts = {
-    rtcConfig: self.rtcConfig
+    rtcConfig: self.rtcConfig,
+    wrtc: self.wrtc
   }
 
   self.tracker = new Tracker(self.peerId, self.port, torrent, trackerOpts)
