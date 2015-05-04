@@ -24,7 +24,7 @@
   "devDependencies": {
     "hat": "0.0.3",
     "standard": "^3.1.2",
-    "tape": "^3.5.0"
+    "tape": "^4.0.0"
   },
   "homepage": "http://webtorrent.io",
   "keywords": [
