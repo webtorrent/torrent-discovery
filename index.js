@@ -107,8 +107,10 @@ Discovery.prototype._createTracker = function () {
   }
 
   self.tracker = new Tracker(self.peerId, self.port, torrent, trackerOpts)
-
   reemit(self.tracker, self, ['peer', 'warning', 'error'])
+  self.tracker.on('update', function (data) {
+    self.emit('trackerAnnounce', data)
+  })
   self.tracker.start()
 }
 
