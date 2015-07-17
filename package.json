@@ -19,6 +19,7 @@
     "debug": "^2.0.0",
     "inherits": "^2.0.1",
     "re-emitter": "^1.0.0",
+    "run-parallel": "^1.1.2",
     "xtend": "^4.0.0"
   },
   "devDependencies": {

@@ -5,6 +5,7 @@ var DHT = require('bittorrent-dht/client') // empty object in browser
 var EventEmitter = require('events').EventEmitter
 var extend = require('xtend/mutable')
 var inherits = require('inherits')
+var parallel = require('run-parallel')
 var reemit = require('re-emitter')
 var Tracker = require('bittorrent-tracker/client')
 
@@ -73,13 +74,22 @@ Discovery.prototype.setTorrent = function (torrent) {
 
 Discovery.prototype.stop = function (cb) {
   var self = this
-  if (self.tracker) {
-    if (self.tracker.stop) self.tracker.stop()
-    if (self.tracker.destroy) self.tracker.destroy()
+  var tasks = []
+
+  if (self.tracker && self.tracker !== true) {
+    self.tracker.stop()
+    tasks.push(function (cb) {
+      self.tracker.destroy(cb)
+    })
   }
 
-  if (!self._externalDHT && self.dht && self.dht.destroy) self.dht.destroy(cb)
-  else process.nextTick(function () { cb(null) })
+  if (!self._externalDHT && self.dht && self.dht !== true) {
+    tasks.push(function (cb) {
+      self.dht.destroy(cb)
+    })
+  }
+
+  parallel(tasks, cb)
 }
 
 Discovery.prototype._createDHT = function (port) {
