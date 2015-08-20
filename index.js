@@ -72,6 +72,24 @@ Discovery.prototype.setTorrent = function (torrent) {
   }
 }
 
+Discovery.prototype.updatePort = function (port) {
+  var self = this
+  if (port === self.port) return
+  self.port = port
+
+  if (self.dht && self.infoHash) {
+    self._performedDHTLookup = false
+    self._dhtLookupAndAnnounce()
+  }
+
+  if (self.tracker && self.tracker !== true) {
+    self.tracker.stop()
+    self.tracker.destroy(function () {
+      self._createTracker()
+    })
+  }
+}
+
 Discovery.prototype.stop = function (cb) {
   var self = this
   var tasks = []
@@ -106,10 +124,11 @@ Discovery.prototype._createTracker = function () {
   var self = this
   if (!self.tracker) return
 
-  var torrent = self.torrent || {
-    infoHash: self.infoHashHex,
-    announce: self.announce
-  }
+  var torrent = self.torrent
+    ? extend({}, self.torrent)
+    : { infoHash: self.infoHashHex, announce: [] }
+
+  if (self.announce) torrent.announce = torrent.announce.concat(self.announce)
 
   var trackerOpts = {
     rtcConfig: self.rtcConfig,

@@ -64,6 +64,11 @@ searching for peers.
 Later, when you get the full torrent metadata (parsed via [parse-torrent](https://github.com/feross/parse-torrent)), call this method again to ensure more accurate tracker stats
 (because we now know the torrent length).
 
+#### `discovery.updatePort(port)`
+
+When the port that the torrent client is listening on changes, call this method to
+reannounce to the tracker and DHT with the new port.
+
 #### `discovery.stop()`
 
 Destroy and cleanup the DHT and tracker instances.
