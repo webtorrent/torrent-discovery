@@ -21,9 +21,7 @@ single API for discovering BitTorrent peers via both discovery methods.
 - can start finding peers with just an info hash, before full metadata is available
 
 This module also **works in the browser** with [browserify](http://browserify.org). In
-that context, it uses [webtorrent-dht](https://github.com/feross/webtorrent-dht) (TODO!) and
-[webtorrent-tracker](https://github.com/feross/webtorrent-tracker) clients to discover
-[WebTorrent](http://webtorrent.io) (WebRTC) peers.
+that context, it discovers [WebTorrent](http://webtorrent.io) (WebRTC) peers.
 
 ### install
 
