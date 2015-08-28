@@ -125,7 +125,7 @@ Discovery.prototype._createTracker = function () {
   if (!self.tracker) return
 
   var torrent = self.torrent
-    ? extend({}, self.torrent)
+    ? extend({ announce: [] }, self.torrent)
     : { infoHash: self.infoHashHex, announce: [] }
 
   if (self.announce) torrent.announce = torrent.announce.concat(self.announce)
