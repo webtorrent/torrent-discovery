@@ -27,7 +27,7 @@ function Discovery (opts) {
   }, opts)
 
   self.infoHash = null
-  self.infoHashHex = null
+  self.infoHashBuffer = null
   self.torrent = null
 
   self._externalDHT = typeof self.dht === 'object'
@@ -42,21 +42,21 @@ function Discovery (opts) {
 Discovery.prototype.setTorrent = function (torrent) {
   var self = this
 
-  if (!self.infoHash && Buffer.isBuffer(torrent) || typeof torrent === 'string') {
-    self.infoHash = typeof torrent === 'string'
+  if (!self.infoHashBuffer && Buffer.isBuffer(torrent) || typeof torrent === 'string') {
+    self.infoHashBuffer = typeof torrent === 'string'
       ? new Buffer(torrent, 'hex')
       : torrent
-  } else if (!self.torrent && torrent && torrent.infoHash) {
+  } else if (!self.torrent && torrent && torrent.infoHashBuffer) {
     self.torrent = torrent
-    self.infoHash = typeof torrent.infoHash === 'string'
-      ? new Buffer(torrent.infoHash, 'hex')
-      : torrent.infoHash
+    self.infoHashBuffer = typeof torrent.infoHashBuffer === 'string'
+      ? new Buffer(torrent.infoHashBuffer, 'hex')
+      : torrent.infoHashBuffer
   } else {
     return
   }
 
-  self.infoHashHex = self.infoHash.toString('hex')
-  debug('setTorrent %s', self.infoHashHex)
+  self.infoHash = self.infoHashBuffer.toString('hex')
+  debug('setTorrent %s', self.infoHash)
 
   // If tracker exists, then it was created with just infoHash. Set torrent length
   // so client can report correct information about uploads.
@@ -77,7 +77,7 @@ Discovery.prototype.updatePort = function (port) {
   if (port === self.port) return
   self.port = port
 
-  if (self.dht && self.infoHash) {
+  if (self.dht && self.infoHashBuffer) {
     self._performedDHTLookup = false
     self._dhtLookupAndAnnounce()
   }
@@ -115,7 +115,7 @@ Discovery.prototype._createDHT = function (port) {
   if (!self._externalDHT) self.dht = new DHT()
   reemit(self.dht, self, ['error', 'warning'])
   self.dht.on('peer', function (addr, infoHash) {
-    if (infoHash === self.infoHashHex) self.emit('peer', addr)
+    if (infoHash === self.infoHash) self.emit('peer', addr)
   })
   if (!self._externalDHT) self.dht.listen(port)
 }
@@ -126,7 +126,7 @@ Discovery.prototype._createTracker = function () {
 
   var torrent = self.torrent
     ? extend({ announce: [] }, self.torrent)
-    : { infoHash: self.infoHashHex, announce: [] }
+    : { infoHash: self.infoHash, announce: [] }
 
   if (self.announce) torrent.announce = torrent.announce.concat(self.announce)
 
@@ -149,10 +149,10 @@ Discovery.prototype._dhtLookupAndAnnounce = function () {
   self._performedDHTLookup = true
 
   debug('dht lookup')
-  self.dht.lookup(self.infoHash, function (err) {
+  self.dht.lookup(self.infoHashBuffer, function (err) {
     if (err || !self.port) return
     debug('dht announce')
-    self.dht.announce(self.infoHash, self.port, function () {
+    self.dht.announce(self.infoHashBuffer, self.port, function () {
       debug('dht announce complete')
       self.emit('dhtAnnounce')
     })
