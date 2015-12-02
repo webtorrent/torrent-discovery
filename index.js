@@ -42,7 +42,7 @@ function Discovery (opts) {
 Discovery.prototype.setTorrent = function (torrent) {
   var self = this
 
-  if (!self.infoHash && Buffer.isBuffer(torrent) || typeof torrent === 'string') {
+  if (!self.infoHash && (Buffer.isBuffer(torrent) || typeof torrent === 'string')) {
     self.infoHash = typeof torrent === 'string'
       ? new Buffer(torrent, 'hex')
       : torrent
