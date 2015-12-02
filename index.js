@@ -27,7 +27,7 @@ function Discovery (opts) {
   }, opts)
 
   self.infoHash = null
-  self.infoHashHex = null
+  self.infoHashBuffer = null
   self.torrent = null
 
   self._externalDHT = typeof self.dht === 'object'
@@ -42,21 +42,21 @@ function Discovery (opts) {
 Discovery.prototype.setTorrent = function (torrent) {
   var self = this
 
-  if (!self.infoHash && (Buffer.isBuffer(torrent) || typeof torrent === 'string')) {
+  if (!self.infoHash && (typeof torrent === 'string' || Buffer.isBuffer(torrent))) {
     self.infoHash = typeof torrent === 'string'
-      ? new Buffer(torrent, 'hex')
-      : torrent
+      ? torrent
+      : torrent.toString('hex')
   } else if (!self.torrent && torrent && torrent.infoHash) {
     self.torrent = torrent
     self.infoHash = typeof torrent.infoHash === 'string'
-      ? new Buffer(torrent.infoHash, 'hex')
-      : torrent.infoHash
+      ? torrent.infoHash
+      : torrent.infoHash.toString('hex')
   } else {
     return
   }
+  self.infoHashBuffer = new Buffer(self.infoHash, 'hex')
 
-  self.infoHashHex = self.infoHash.toString('hex')
-  debug('setTorrent %s', self.infoHashHex)
+  debug('setTorrent %s', self.infoHash)
 
   // If tracker exists, then it was created with just infoHash. Set torrent length
   // so client can report correct information about uploads.
@@ -115,7 +115,7 @@ Discovery.prototype._createDHT = function (port) {
   if (!self._externalDHT) self.dht = new DHT()
   reemit(self.dht, self, ['error', 'warning'])
   self.dht.on('peer', function (addr, infoHash) {
-    if (infoHash === self.infoHashHex) self.emit('peer', addr)
+    if (infoHash === self.infoHash) self.emit('peer', addr)
   })
   if (!self._externalDHT) self.dht.listen(port)
 }
@@ -126,7 +126,7 @@ Discovery.prototype._createTracker = function () {
 
   var torrent = self.torrent
     ? extend({ announce: [] }, self.torrent)
-    : { infoHash: self.infoHashHex, announce: [] }
+    : { infoHash: self.infoHash, announce: [] }
 
   if (self.announce) torrent.announce = torrent.announce.concat(self.announce)
 
