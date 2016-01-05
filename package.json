@@ -14,7 +14,7 @@
     "url": "https://github.com/feross/torrent-discovery/issues"
   },
   "dependencies": {
-    "bittorrent-dht": "^5.0.0",
+    "bittorrent-dht": "^6.0.0",
     "bittorrent-tracker": "^7.0.0",
     "debug": "^2.0.0",
     "inherits": "^2.0.1",
