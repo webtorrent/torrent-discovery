@@ -114,8 +114,8 @@ Discovery.prototype._createDHT = function (port) {
   var self = this
   if (!self._externalDHT) self.dht = new DHT()
   reemit(self.dht, self, ['error', 'warning'])
-  self.dht.on('peer', function (addr, infoHash) {
-    if (infoHash === self.infoHash) self.emit('peer', addr)
+  self.dht.on('peer', function (peer, infoHash) {
+    if (infoHash.toString('hex') === self.infoHash) self.emit('peer', peer.host + ':' + peer.port)
   })
   if (!self._externalDHT) self.dht.listen(port)
 }
