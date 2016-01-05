@@ -1,7 +1,7 @@
 {
   "name": "torrent-discovery",
   "description": "Discover BitTorrent and WebTorrent peers",
-  "version": "4.0.2",
+  "version": "5.0.0",
   "author": {
     "name": "Feross Aboukhadijeh",
     "email": "feross@feross.org",
