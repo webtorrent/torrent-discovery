@@ -66,10 +66,7 @@ Discovery.prototype.setTorrent = function (torrent) {
     self._createTracker()
   }
 
-  if (self.dht) {
-    if (self.dht.ready) self._dhtLookupAndAnnounce()
-    else self.dht.on('ready', self._dhtLookupAndAnnounce.bind(self))
-  }
+  if (self.dht) self._dhtLookupAndAnnounce()
 }
 
 Discovery.prototype.updatePort = function (port) {
