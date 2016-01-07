@@ -30,12 +30,13 @@ test('initialize with default dht', function (t) {
 })
 
 test('initialize without dht', function (t) {
-  t.plan(1)
+  t.plan(2)
   var discovery = new Discovery({
     peerId: hat(160),
     port: 6000,
     dht: false
   })
+  t.equal(discovery.dht, false)
   discovery.stop(function () {
     t.pass()
   })
