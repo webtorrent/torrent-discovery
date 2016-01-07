@@ -3,7 +3,7 @@ module.exports = Discovery
 var debug = require('debug')('torrent-discovery')
 var DHT = require('bittorrent-dht/client') // empty object in browser
 var EventEmitter = require('events').EventEmitter
-var extend = require('xtend/mutable')
+var extend = require('xtend')
 var inherits = require('inherits')
 var parallel = require('run-parallel')
 var reemit = require('re-emitter')
@@ -16,27 +16,40 @@ function Discovery (opts) {
   if (!(self instanceof Discovery)) return new Discovery(opts)
   EventEmitter.call(self)
 
-  extend(self, {
-    announce: [],
-    dht: typeof DHT === 'function',
-    rtcConfig: null, // browser only
-    peerId: null,
-    port: 0, // torrent port
-    tracker: true,
-    wrtc: null
-  }, opts)
+  self.announce = opts.announce || []
+  self.rtcConfig = opts.rtcConfig // browser only
+  self.peerId = opts.peerId
+  self.port = opts.port || 0 // torrent port
+  self.tracker = opts.tracker || true
+  self.wrtc = opts.wrtc
+  self.intervalMs = opts.intervalMs || 15 * 60 * 1000
+
+  if (!self.peerId) throw new Error('peerId required')
+  if (!process.browser && !self.port) throw new Error('port required')
 
   self.infoHash = null
   self.infoHashBuffer = null
   self.torrent = null
 
-  self._externalDHT = typeof self.dht === 'object'
-  self._performedDHTLookup = false
+  self._dhtTimeout = false
+  self._internalDHT = false // is the DHT created internally?
+  self.dht = opts.dht || createDHT()
 
-  if (!self.peerId) throw new Error('peerId required')
-  if (!process.browser && !self.port) throw new Error('port required')
+  reemit(self.dht, self, ['error', 'warning'])
+  self.dht.on('peer', onPeer)
 
-  if (self.dht) self._createDHT(self.dhtPort)
+  function createDHT () {
+    if (typeof DHT !== 'function') return false
+    self._internalDHT = true
+    var dht = new DHT()
+    dht.listen(opts.dhtPort)
+    return dht
+  }
+
+  function onPeer (peer, infoHash) {
+    if (infoHash.toString('hex') !== self.infoHash) return
+    self.emit('peer', peer.host + ':' + peer.port)
+  }
 }
 
 Discovery.prototype.setTorrent = function (torrent) {
@@ -66,7 +79,7 @@ Discovery.prototype.setTorrent = function (torrent) {
     self._createTracker()
   }
 
-  if (self.dht) self._dhtLookupAndAnnounce()
+  if (self.dht) self._dhtAnnounce()
 }
 
 Discovery.prototype.updatePort = function (port) {
@@ -74,10 +87,7 @@ Discovery.prototype.updatePort = function (port) {
   if (port === self.port) return
   self.port = port
 
-  if (self.dht && self.infoHash) {
-    self._performedDHTLookup = false
-    self._dhtLookupAndAnnounce()
-  }
+  if (self.dht) self._dhtAnnounce()
 
   if (self.tracker && self.tracker !== true) {
     self.tracker.stop()
@@ -98,23 +108,13 @@ Discovery.prototype.stop = function (cb) {
     })
   }
 
-  if (!self._externalDHT && self.dht && self.dht !== true) {
+  if (self._internalDHT) {
     tasks.push(function (cb) {
       self.dht.destroy(cb)
     })
   }
 
   parallel(tasks, cb)
-}
-
-Discovery.prototype._createDHT = function (port) {
-  var self = this
-  if (!self._externalDHT) self.dht = new DHT()
-  reemit(self.dht, self, ['error', 'warning'])
-  self.dht.on('peer', function (peer, infoHash) {
-    if (infoHash.toString('hex') === self.infoHash) self.emit('peer', peer.host + ':' + peer.port)
-  })
-  if (!self._externalDHT) self.dht.listen(port)
 }
 
 Discovery.prototype._createTracker = function () {
@@ -134,25 +134,34 @@ Discovery.prototype._createTracker = function () {
 
   self.tracker = new Tracker(self.peerId, self.port, torrent, trackerOpts)
   reemit(self.tracker, self, ['peer', 'warning', 'error'])
-  self.tracker.on('update', function (data) {
-    self.emit('trackerAnnounce', data)
-  })
+  self.tracker.setInterval(self.intervalMs)
+  self.tracker.on('update', onUpdate)
   self.tracker.start()
+
+  function onUpdate (data) {
+    self.emit('trackerAnnounce', data)
+  }
 }
 
-Discovery.prototype._dhtLookupAndAnnounce = function () {
+Discovery.prototype._dhtAnnounce = function () {
   var self = this
-  if (self._performedDHTLookup) return
-  self._performedDHTLookup = true
+  if (!self.port || !self.infoHash) return
 
-  debug('dht lookup')
-  self.dht.lookup(self.infoHash, function (err) {
-    if (err || !self.port) return
-    debug('dht announce')
-    self.dht.announce(self.infoHash, self.port, function (err) {
-      debug('dht announce complete')
-      if (err) self.emit('dhtAnnounceFail')
-      else self.emit('dhtAnnounce')
-    })
+  self.dht.announce(self.infoHash, self.port, function (err) {
+    debug('dht announce complete')
+    if (err) self.emit('warning', err)
+    self.emit('dhtAnnounce')
+
+    clearTimeout(self._dhtTimeout)
+    self._dhtTimeout = setTimeout(function () {
+      self._dhtAnnounce()
+    }, getRandomTimeout())
+    self._dhtTimeout.unref()
   })
+
+  // Returns timeout interval, with some random jitter
+  function getRandomTimeout () {
+    return self.intervalMs + Math.floor(Math.random() * self.intervalMs / 5)
+  }
 }
+
