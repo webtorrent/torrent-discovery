@@ -164,7 +164,7 @@ Discovery.prototype._dhtAnnounce = function () {
     self._dhtTimeout = setTimeout(function () {
       self._dhtAnnounce()
     }, getRandomTimeout())
-    self._dhtTimeout.unref()
+    if (typeof window === 'undefined' /* browser exclude */) self._dhtTimeout.unref()
   })
 
   // Returns timeout interval, with some random jitter
@@ -172,4 +172,3 @@ Discovery.prototype._dhtAnnounce = function () {
     return self.intervalMs + Math.floor(Math.random() * self.intervalMs / 5)
   }
 }
-
