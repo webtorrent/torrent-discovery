@@ -20,7 +20,7 @@ function Discovery (opts) {
   self.rtcConfig = opts.rtcConfig // browser only
   self.peerId = opts.peerId
   self.port = opts.port || 0 // torrent port
-  self.tracker = opts.tracker || true
+  self.tracker = opts.tracker !== false
   self.wrtc = opts.wrtc
   self.intervalMs = opts.intervalMs || 15 * 60 * 1000
 
