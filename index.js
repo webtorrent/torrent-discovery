@@ -20,7 +20,6 @@ function Discovery (opts) {
   self.rtcConfig = opts.rtcConfig // browser only
   self.peerId = opts.peerId
   self.port = opts.port || 0 // torrent port
-  self.tracker = opts.tracker !== false
   self.wrtc = opts.wrtc
   self.intervalMs = opts.intervalMs || (15 * 60 * 1000)
 
@@ -34,9 +33,20 @@ function Discovery (opts) {
   self._dhtAnnouncing = false
   self._dhtTimeout = false
   self._internalDHT = false // is the DHT created internally?
-  self.dht = opts.dht === false
-    ? false
-    : opts.dht || createDHT()
+
+  if (opts.tracker === false) {
+    self.tracker = false
+  } else {
+    self.tracker = true
+  }
+
+  if (opts.dht === false) {
+    self.dht = false
+  } else if (typeof opts.dht === 'object') {
+    self.dht = opts.dht
+  } else {
+    self.dht = createDHT()
+  }
 
   if (self.dht) {
     reemit(self.dht, self, ['error', 'warning'])
@@ -105,6 +115,7 @@ Discovery.prototype.updatePort = function (port) {
 Discovery.prototype.stop = function (cb) {
   var self = this
   var tasks = []
+  clearTimeout(self._dhtTimeout)
 
   if (self.tracker && self.tracker !== true) {
     self.tracker.stop()
@@ -118,7 +129,6 @@ Discovery.prototype.stop = function (cb) {
       self.dht.destroy(cb)
     })
   }
-
   parallel(tasks, cb)
 }
 
@@ -159,13 +169,12 @@ Discovery.prototype._dhtAnnounce = function () {
 
     debug('dht announce complete')
     self.emit('dhtAnnounce')
-
-    clearTimeout(self._dhtTimeout)
-    self._dhtTimeout = setTimeout(function () {
-      self._dhtAnnounce()
-    }, getRandomTimeout())
-    self._dhtTimeout.unref()
   })
+
+  clearTimeout(self._dhtTimeout)
+  self._dhtTimeout = setTimeout(function () {
+    self._dhtAnnounce()
+  }, getRandomTimeout())
 
   // Returns timeout interval, with some random jitter
   function getRandomTimeout () {
