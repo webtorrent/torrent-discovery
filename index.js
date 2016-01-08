@@ -33,10 +33,14 @@ function Discovery (opts) {
 
   self._dhtTimeout = false
   self._internalDHT = false // is the DHT created internally?
-  self.dht = opts.dht || createDHT()
+  self.dht = opts.dht === false
+    ? false
+    : opts.dht || createDHT()
 
-  reemit(self.dht, self, ['error', 'warning'])
-  self.dht.on('peer', onPeer)
+  if (self.dht) {
+    reemit(self.dht, self, ['error', 'warning'])
+    self.dht.on('peer', onPeer)
+  }
 
   function createDHT () {
     if (typeof DHT !== 'function') return false
