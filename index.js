@@ -22,7 +22,7 @@ function Discovery (opts) {
   self.port = opts.port || 0 // torrent port
   self.tracker = opts.tracker !== false
   self.wrtc = opts.wrtc
-  self.intervalMs = opts.intervalMs || 15 * 60 * 1000
+  self.intervalMs = opts.intervalMs || (15 * 60 * 1000)
 
   if (!self.peerId) throw new Error('peerId required')
   if (!process.browser && !self.port) throw new Error('port required')
@@ -31,6 +31,7 @@ function Discovery (opts) {
   self.infoHashBuffer = null
   self.torrent = null
 
+  self._dhtAnnouncing = false
   self._dhtTimeout = false
   self._internalDHT = false // is the DHT created internally?
   self.dht = opts.dht === false
@@ -83,7 +84,7 @@ Discovery.prototype.setTorrent = function (torrent) {
     self._createTracker()
   }
 
-  if (self.dht) self._dhtAnnounce()
+  self._dhtAnnounce()
 }
 
 Discovery.prototype.updatePort = function (port) {
@@ -91,7 +92,7 @@ Discovery.prototype.updatePort = function (port) {
   if (port === self.port) return
   self.port = port
 
-  if (self.dht) self._dhtAnnounce()
+  self._dhtAnnounce()
 
   if (self.tracker && self.tracker !== true) {
     self.tracker.stop()
@@ -149,11 +150,14 @@ Discovery.prototype._createTracker = function () {
 
 Discovery.prototype._dhtAnnounce = function () {
   var self = this
-  if (!self.port || !self.infoHash) return
+  if (!self.port || !self.infoHash || !self.dht || self._dhtAnnouncing) return
 
+  self._dhtAnnouncing = true
   self.dht.announce(self.infoHash, self.port, function (err) {
-    debug('dht announce complete')
     if (err) self.emit('warning', err)
+    self._dhtAnnouncing = false
+
+    debug('dht announce complete')
     self.emit('dhtAnnounce')
 
     clearTimeout(self._dhtTimeout)
