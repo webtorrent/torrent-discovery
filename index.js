@@ -170,7 +170,7 @@ Discovery.prototype._dhtAnnounce = function () {
     scheduleReannounce()
   })
 
-  function scheduleReannounce() {
+  function scheduleReannounce () {
     clearTimeout(self._dhtTimeout)
     self._dhtTimeout = setTimeout(function () {
       self._dhtAnnounce()
