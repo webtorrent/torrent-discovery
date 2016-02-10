@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "hat": "0.0.3",
-    "standard": "^5.1.0",
+    "standard": "^6.0.4",
     "tape": "^4.0.0"
   },
   "keywords": [
