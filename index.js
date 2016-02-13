@@ -164,7 +164,7 @@ Discovery.prototype._dhtAnnounce = function () {
   self.dht.announce(self.infoHash, self.port, function (err) {
     if (err) self.emit('warning', err)
 
-    debug('dht announce complete')
+    debug('dht announce complete, infoHash = ' + self.infoHash)
     self.emit('dhtAnnounce')
 
     scheduleReannounce()
