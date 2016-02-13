@@ -30,7 +30,6 @@ function Discovery (opts) {
   self.infoHashBuffer = null
   self.torrent = null
 
-  self._dhtAnnouncing = false
   self._dhtTimeout = false
   self._internalDHT = false // is the DHT created internally?
 
@@ -160,21 +159,23 @@ Discovery.prototype._createTracker = function () {
 
 Discovery.prototype._dhtAnnounce = function () {
   var self = this
-  if (!self.port || !self.infoHash || !self.dht || self._dhtAnnouncing) return
+  if (!self.port || !self.infoHash || !self.dht) return
 
-  self._dhtAnnouncing = true
   self.dht.announce(self.infoHash, self.port, function (err) {
     if (err) self.emit('warning', err)
-    self._dhtAnnouncing = false
 
-    debug('dht announce complete')
+    debug('dht announce complete, infoHash = ' + self.infoHash)
     self.emit('dhtAnnounce')
+
+    scheduleReannounce()
   })
 
-  clearTimeout(self._dhtTimeout)
-  self._dhtTimeout = setTimeout(function () {
-    self._dhtAnnounce()
-  }, getRandomTimeout())
+  function scheduleReannounce () {
+    clearTimeout(self._dhtTimeout)
+    self._dhtTimeout = setTimeout(function () {
+      self._dhtAnnounce()
+    }, getRandomTimeout())
+  }
 
   // Returns timeout interval, with some random jitter
   function getRandomTimeout () {
