@@ -50,7 +50,6 @@ function Discovery (opts) {
   }
 
   if (self.dht) {
-    reemit(self.dht, self, ['error', 'warning'])
     self.dht.on('peer', onPeer)
   }
 
@@ -58,6 +57,7 @@ function Discovery (opts) {
     if (typeof DHT !== 'function') return false
     self._internalDHT = true
     var dht = new DHT()
+    reemit(dht, self, ['error', 'warning'])
     dht.listen(opts.dhtPort)
     return dht
   }
