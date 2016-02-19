@@ -22,6 +22,7 @@ function Discovery (opts) {
   self.port = opts.port || 0 // torrent port
   self.wrtc = opts.wrtc
   self.intervalMs = opts.intervalMs || (15 * 60 * 1000)
+  self.destroyed = false
 
   if (!self.peerId) throw new Error('peerId required')
   if (!process.browser && !self.port) throw new Error('port required')
@@ -114,8 +115,10 @@ Discovery.prototype.updatePort = function (port) {
 
 Discovery.prototype.stop = function (cb) {
   var self = this
-  var tasks = []
+  self.destroyed = true
   clearTimeout(self._dhtTimeout)
+
+  var tasks = []
 
   if (self.tracker && self.tracker !== true) {
     self.tracker.stop()
@@ -173,9 +176,11 @@ Discovery.prototype._dhtAnnounce = function () {
     if (err) self.emit('warning', err)
     self.emit('dhtAnnounce')
 
-    self._dhtTimeout = setTimeout(function () {
-      self._dhtAnnounce()
-    }, getRandomTimeout())
+    if (!self.destroyed) {
+      self._dhtTimeout = setTimeout(function () {
+        self._dhtAnnounce()
+      }, getRandomTimeout())
+    }
   })
 
   // Returns timeout interval, with some random jitter
@@ -183,4 +188,3 @@ Discovery.prototype._dhtAnnounce = function () {
     return self.intervalMs + Math.floor(Math.random() * self.intervalMs / 5)
   }
 }
-
