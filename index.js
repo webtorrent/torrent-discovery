@@ -23,6 +23,7 @@ function Discovery (opts) {
   self.wrtc = opts.wrtc
   self.intervalMs = opts.intervalMs || (15 * 60 * 1000)
   self.destroyed = false
+  self.getAnnounceOpts = opts.getAnnounceOpts
 
   if (!self.peerId) throw new Error('peerId required')
   if (!process.browser && !self.port) throw new Error('port required')
@@ -147,7 +148,8 @@ Discovery.prototype._createTracker = function () {
 
   var trackerOpts = {
     rtcConfig: self.rtcConfig,
-    wrtc: self.wrtc
+    wrtc: self.wrtc,
+    getAnnounceOpts: self.getAnnounceOpts
   }
 
   self.tracker = new Tracker(self.peerId, self.port, torrent, trackerOpts)
