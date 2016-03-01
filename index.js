@@ -16,18 +16,16 @@ function Discovery (opts) {
   if (!(self instanceof Discovery)) return new Discovery(opts)
   EventEmitter.call(self)
 
-  self.announce = opts.announce || []
-  self.rtcConfig = opts.rtcConfig // browser only
   self.peerId = opts.peerId
   self.port = opts.port || 0 // torrent port
-  self.wrtc = opts.wrtc
-  self.intervalMs = opts.intervalMs || (15 * 60 * 1000)
-  self.destroyed = false
-  self.getAnnounceOpts = opts.getAnnounceOpts
 
   if (!self.peerId) throw new Error('peerId required')
   if (!process.browser && !self.port) throw new Error('port required')
 
+  self.announce = opts.announce || []
+  self._intervalMs = opts.intervalMs || (15 * 60 * 1000)
+
+  self.destroyed = false
   self.infoHash = null
   self.infoHashBuffer = null
   self.torrent = null
@@ -40,26 +38,29 @@ function Discovery (opts) {
     self.tracker = false
   } else {
     self.tracker = true
+    self._trackerOpts = opts.tracker || {}
   }
 
-  if (opts.dht === false) {
+  if (opts.dht === false || typeof DHT !== 'function') {
     self.dht = false
-  } else if (typeof opts.dht === 'object') {
+  } else if (opts.dht && typeof opts.dht.announce === 'function' &&
+      typeof opts.dht.addNode === 'function') {
     self.dht = opts.dht
+  } else if (typeof opts.dht === 'object') {
+    self.dht = createDHT(opts.dhtPort, opts.dht)
   } else {
-    self.dht = createDHT()
+    self.dht = createDHT(opts.dhtPort)
   }
 
   if (self.dht) {
     self.dht.on('peer', onPeer)
   }
 
-  function createDHT () {
-    if (typeof DHT !== 'function') return false
+  function createDHT (port, opts) {
     self._internalDHT = true
-    var dht = new DHT()
-    reemit(dht, self, ['error', 'warning'])
-    dht.listen(opts.dhtPort)
+    var dht = new DHT(opts)
+    reemit(dht, self, ['warning', 'error'])
+    dht.listen(port)
     return dht
   }
 
@@ -146,15 +147,9 @@ Discovery.prototype._createTracker = function () {
 
   if (self.announce) torrent.announce = torrent.announce.concat(self.announce)
 
-  var trackerOpts = {
-    rtcConfig: self.rtcConfig,
-    wrtc: self.wrtc,
-    getAnnounceOpts: self.getAnnounceOpts
-  }
-
-  self.tracker = new Tracker(self.peerId, self.port, torrent, trackerOpts)
+  self.tracker = new Tracker(self.peerId, self.port, torrent, self._trackerOpts)
   reemit(self.tracker, self, ['peer', 'warning', 'error'])
-  self.tracker.setInterval(self.intervalMs)
+  self.tracker.setInterval(self._intervalMs)
   self.tracker.on('update', onUpdate)
   self.tracker.start()
 
@@ -187,6 +182,6 @@ Discovery.prototype._dhtAnnounce = function () {
 
   // Returns timeout interval, with some random jitter
   function getRandomTimeout () {
-    return self.intervalMs + Math.floor(Math.random() * self.intervalMs / 5)
+    return self._intervalMs + Math.floor(Math.random() * self._intervalMs / 5)
   }
 }

@@ -47,14 +47,17 @@ Optional options are:
 ```
 {
   announce: [],  // force list of announce urls to use (from magnet uri)
-  dht: true,     // use dht? also, can optionally pass in global DHT instance to use
-  tracker: true, // use trackers?
-  rtcConfig: {}, // RTCPeerConnection config object (only used in browser)
-  wrtc: {}       // custom webrtc implementation, mainly useful in node to specify in the [wrtc](https://npmjs.com/package/wrtc) package
+  dht: true,     // use dht? optionally, this can be an `opts` object, or a DHT instance to use (can be reused for multiple torrents)
+  dhtPort: 0,    // custom listen port for the DHT instance (not used if DHT instance is given via `opts.dht`)
+  tracker: true, // use trackers? optionally, this can be an `opts` object
 }
 ```
 
-**This module automatically handles announcing to the DHT, for maximum peer discovery.**
+See the documentation for [bittorrent-dht](https://github.com/feross/bittorrent-dht) and
+[bittorrent-tracker](https://github.com/feross/bittorrent-tracker) for information on what
+options are available via the `opts` object.
+
+**This module automatically handles announcing on intervals, for maximum peer discovery.**
 
 #### `discovery.setTorrent(infoHashOrTorrent)`
 
