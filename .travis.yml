@@ -1,6 +1,5 @@
 language: node_js
 sudo: false
 node_js:
-  - 'node'
+  - node
   - '4'
-  - '0.12'
