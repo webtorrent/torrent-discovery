@@ -36,12 +36,15 @@ function Discovery (opts) {
   self._onError = function (err) {
     self.emit('error', err)
   }
-  self._onTrackerPeer = function (peer) {
-    self.emit('peer', peer)
-  }
   self._onDHTPeer = function (peer, infoHash) {
     if (infoHash.toString('hex') !== self.infoHash) return
     self.emit('peer', peer.host + ':' + peer.port)
+  }
+  self._onTrackerPeer = function (peer) {
+    self.emit('peer', peer)
+  }
+  self._onTrackerAnnounce = function () {
+    self.emit('trackerAnnounce')
   }
 
   if (opts.tracker === false) {
@@ -121,24 +124,43 @@ Discovery.prototype.updatePort = function (port) {
 
 Discovery.prototype.destroy = function (cb) {
   var self = this
+  if (self.destroyed) return
   self.destroyed = true
+
   clearTimeout(self._dhtTimeout)
 
   var tasks = []
 
   if (self.tracker && self.tracker !== true) {
     self.tracker.stop()
+    self.tracker.removeListener('warning', self._onWarning)
+    self.tracker.removeListener('error', self._onError)
+    self.tracker.removeListener('peer', self._onTrackerPeer)
+    self.tracker.removeListener('update', self._onTrackerAnnounce)
     tasks.push(function (cb) {
       self.tracker.destroy(cb)
     })
   }
 
+  if (self.dht) {
+    self.dht.removeListener('peer', self._onDHTPeer)
+  }
+
   if (self._internalDHT) {
+    self.dht.removeListener('warning', self._onWarning)
+    self.dht.removeListener('error', self._onError)
     tasks.push(function (cb) {
       self.dht.destroy(cb)
     })
   }
+
   parallel(tasks, cb)
+
+  // cleanup
+  self.dht = null
+  self.tracker = null
+  self._announce = null
+  self._torrent = null
 }
 
 Discovery.prototype._createTracker = function () {
@@ -149,20 +171,12 @@ Discovery.prototype._createTracker = function () {
   torrent.announce = self._announce.concat(torrent.announce || [])
 
   self.tracker = new Tracker(self.peerId, self.port, torrent, self._trackerOpts)
+  self.tracker.on('warning', self._onWarning)
+  self.tracker.on('error', self._onError)
   self.tracker.on('peer', self._onTrackerPeer)
-  self.tracker.on('warning', function (err) {
-    self.emit('warning', err)
-  })
-  self.tracker.on('error', function (err) {
-    self.emit('error', err)
-  })
+  self.tracker.on('update', self._onTrackerAnnounce)
   self.tracker.setInterval(self._intervalMs)
-  self.tracker.on('update', onUpdate)
   self.tracker.start()
-
-  function onUpdate (data) {
-    self.emit('trackerAnnounce', data)
-  }
 }
 
 Discovery.prototype._dhtAnnounce = function () {
