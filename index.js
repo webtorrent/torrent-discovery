@@ -15,9 +15,9 @@ function Discovery (opts) {
   if (!(self instanceof Discovery)) return new Discovery(opts)
   EventEmitter.call(self)
 
-  if (!opts.peerId) throw new Error('peerId required')
-  if (!opts.infoHash) throw new Error('infoHash required')
-  if (!process.browser && !opts.port) throw new Error('port required')
+  if (!opts.peerId) throw new Error('Option `peerId` is required')
+  if (!opts.infoHash) throw new Error('Option `infoHash` is required')
+  if (!process.browser && !opts.port) throw new Error('Option `port` is required')
 
   self.peerId = typeof opts.peerId === 'string'
     ? opts.peerId
