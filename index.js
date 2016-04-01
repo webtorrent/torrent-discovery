@@ -15,35 +15,45 @@ function Discovery (opts) {
   if (!(self instanceof Discovery)) return new Discovery(opts)
   EventEmitter.call(self)
 
+  if (!opts.peerId) throw new Error('peerId required')
+  if (!process.browser && !opts.port) throw new Error('port required')
+
   self.peerId = opts.peerId
-  self.port = opts.port || 0 // torrent port
-
-  if (!self.peerId) throw new Error('peerId required')
-  if (!process.browser && !self.port) throw new Error('port required')
-
-  self.announce = opts.announce || []
-  self._intervalMs = opts.intervalMs || (15 * 60 * 1000)
-
-  self.destroyed = false
+  self.port = opts.port // torrent port
   self.infoHash = null
-  self.infoHashBuffer = null
-  self.torrent = null
+  self.destroyed = false
 
+  self._announce = opts.announce || []
+  self._intervalMs = opts.intervalMs || (15 * 60 * 1000)
+  self._torrent = null
   self._dhtAnnouncing = false
   self._dhtTimeout = false
   self._internalDHT = false // is the DHT created internally?
+
+  self._onWarning = function (err) {
+    self.emit('warning', err)
+  }
+  self._onError = function (err) {
+    self.emit('error', err)
+  }
+  self._onTrackerPeer = function (peer) {
+    self.emit('peer', peer)
+  }
+  self._onDHTPeer = function (peer, infoHash) {
+    if (infoHash.toString('hex') !== self.infoHash) return
+    self.emit('peer', peer.host + ':' + peer.port)
+  }
 
   if (opts.tracker === false) {
     self.tracker = false
   } else {
     self.tracker = true
-    self._trackerOpts = opts.tracker || {}
+    self._trackerOpts = opts.tracker
   }
 
   if (opts.dht === false || typeof DHT !== 'function') {
     self.dht = false
-  } else if (opts.dht && typeof opts.dht.announce === 'function' &&
-      typeof opts.dht.addNode === 'function') {
+  } else if (opts.dht && typeof opts.dht.addNode === 'function') {
     self.dht = opts.dht
   } else if (typeof opts.dht === 'object') {
     self.dht = createDHT(opts.dhtPort, opts.dht)
@@ -52,25 +62,16 @@ function Discovery (opts) {
   }
 
   if (self.dht) {
-    self.dht.on('peer', onPeer)
+    self.dht.on('peer', self._onDHTPeer)
   }
 
   function createDHT (port, opts) {
-    self._internalDHT = true
     var dht = new DHT(opts)
-    dht.on('warning', function (err) {
-      self.emit('warning', err)
-    })
-    dht.on('error', function (err) {
-      self.emit('error', err)
-    })
+    dht.on('warning', self._onWarning)
+    dht.on('error', self._onError)
     dht.listen(port)
+    self._internalDHT = true
     return dht
-  }
-
-  function onPeer (peer, infoHash) {
-    if (infoHash.toString('hex') !== self.infoHash) return
-    self.emit('peer', peer.host + ':' + peer.port)
   }
 }
 
@@ -81,15 +82,14 @@ Discovery.prototype.setTorrent = function (torrent) {
     self.infoHash = typeof torrent === 'string'
       ? torrent
       : torrent.toString('hex')
-  } else if (!self.torrent && torrent && torrent.infoHash) {
-    self.torrent = torrent
+  } else if (!self._torrent && torrent && torrent.infoHash) {
+    self._torrent = torrent
     self.infoHash = typeof torrent.infoHash === 'string'
       ? torrent.infoHash
       : torrent.infoHash.toString('hex')
   } else {
     return
   }
-  self.infoHashBuffer = new Buffer(self.infoHash, 'hex')
 
   debug('setTorrent %s', self.infoHash)
 
@@ -145,16 +145,11 @@ Discovery.prototype._createTracker = function () {
   var self = this
   if (!self.tracker) return
 
-  var torrent = extend({ announce: [] }, self.torrent || { infoHash: self.infoHash })
-
-  if (self.announce) {
-    torrent.announce = torrent.announce.concat(self.announce)
-  }
+  var torrent = extend({}, self._torrent || { infoHash: self.infoHash })
+  torrent.announce = self._announce.concat(torrent.announce || [])
 
   self.tracker = new Tracker(self.peerId, self.port, torrent, self._trackerOpts)
-  self.tracker.on('peer', function (peer) {
-    self.emit('peer', peer)
-  })
+  self.tracker.on('peer', self._onTrackerPeer)
   self.tracker.on('warning', function (err) {
     self.emit('warning', err)
   })
