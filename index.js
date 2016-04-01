@@ -3,6 +3,7 @@ module.exports = Discovery
 var debug = require('debug')('torrent-discovery')
 var DHT = require('bittorrent-dht/client') // empty object in browser
 var EventEmitter = require('events').EventEmitter
+var extend = require('xtend')
 var inherits = require('inherits')
 var parallel = require('run-parallel')
 var Tracker = require('bittorrent-tracker/client')
@@ -24,7 +25,7 @@ function Discovery (opts) {
   self.infoHash = typeof opts.infoHash === 'string'
     ? opts.infoHash
     : opts.infoHash.toString('hex')
-  self.port = opts.port // torrent port
+  self._port = opts.port // torrent port
 
   self.destroyed = false
 
@@ -55,7 +56,8 @@ function Discovery (opts) {
   if (opts.tracker === false) {
     self.tracker = null
   } else if (opts.tracker && typeof opts.tracker === 'object') {
-    self.tracker = self._createTracker(opts.tracker)
+    self._trackerOpts = extend(opts.tracker)
+    self.tracker = self._createTracker()
   } else {
     self.tracker = self._createTracker()
   }
@@ -87,8 +89,8 @@ function Discovery (opts) {
 
 Discovery.prototype.updatePort = function (port) {
   var self = this
-  if (port === self.port) return
-  self.port = port
+  if (port === self._port) return
+  self._port = port
 
   if (self.dht) self._dhtAnnounce()
 
@@ -140,16 +142,17 @@ Discovery.prototype.destroy = function (cb) {
   self._announce = null
 }
 
-Discovery.prototype._createTracker = function (opts) {
+Discovery.prototype._createTracker = function () {
   var self = this
-  if (opts) self._trackerOpts = opts // re-used when tracker is re-created
 
-  var torrent = {
+  var opts = extend(self._trackerOpts, {
     infoHash: self.infoHash,
-    announce: self._announce
-  }
+    announce: self._announce,
+    peerId: self.peerId,
+    port: self._port
+  })
 
-  var tracker = new Tracker(self.peerId, self.port, torrent, self._trackerOpts)
+  var tracker = new Tracker(opts)
   tracker.on('warning', self._onWarning)
   tracker.on('error', self._onError)
   tracker.on('peer', self._onTrackerPeer)
@@ -167,7 +170,7 @@ Discovery.prototype._dhtAnnounce = function () {
   self._dhtAnnouncing = true
   clearTimeout(self._dhtTimeout)
 
-  self.dht.announce(self.infoHash, self.port, function (err) {
+  self.dht.announce(self.infoHash, self._port, function (err) {
     self._dhtAnnouncing = false
     debug('dht announce complete')
 
