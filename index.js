@@ -15,8 +15,6 @@ function Discovery (opts) {
   if (!(self instanceof Discovery)) return new Discovery(opts)
   EventEmitter.call(self)
 
-  self.setMaxListeners(0) /* don't warn on > 10 listeners */
-
   self.peerId = opts.peerId
   self.port = opts.port || 0 // torrent port
 
