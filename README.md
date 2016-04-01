@@ -35,16 +35,17 @@ npm install torrent-discovery
 
 Create a new peer discovery instance. Required options are:
 
-```
+```js
 {
-  peerId: '', // as utf8 string or Buffer
-  port: 0     // torrent client port (only required in node)
+  infoHash: '', // as hex string or Buffer
+  peerId: '',   // as hex string or Buffer
+  port: 0       // torrent client port (only required in node)
 }
 ```
 
 Optional options are:
 
-```
+```js
 {
   announce: [],  // force list of announce urls to use (from magnet uri)
   dht: true,     // use dht? optionally, this can be an `opts` object, or a DHT instance to use (can be reused for multiple torrents)
@@ -58,14 +59,6 @@ See the documentation for [bittorrent-dht](https://github.com/feross/bittorrent-
 options are available via the `opts` object.
 
 **This module automatically handles announcing on intervals, for maximum peer discovery.**
-
-#### `discovery.setTorrent(infoHashOrTorrent)`
-
-When you learn the infoHash (hex string) of the torrent, call this method to begin
-searching for peers.
-
-Later, when you get the full torrent metadata (parsed via [parse-torrent](https://github.com/feross/parse-torrent)), call this method again to ensure more accurate tracker stats
-(because we now know the torrent length).
 
 #### `discovery.updatePort(port)`
 

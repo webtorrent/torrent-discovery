@@ -7,6 +7,7 @@ test('initialize with dht', function (t) {
   t.plan(1)
   var dht = new DHT()
   var discovery = new Discovery({
+    infoHash: hat(160),
     peerId: hat(160),
     port: 6000,
     dht: dht
@@ -21,6 +22,7 @@ test('initialize with dht', function (t) {
 test('initialize with default dht', function (t) {
   t.plan(1)
   var discovery = new Discovery({
+    infoHash: hat(160),
     peerId: hat(160),
     port: 6000
   })
@@ -32,11 +34,12 @@ test('initialize with default dht', function (t) {
 test('initialize without dht', function (t) {
   t.plan(2)
   var discovery = new Discovery({
+    infoHash: hat(160),
     peerId: hat(160),
     port: 6000,
     dht: false
   })
-  t.equal(discovery.dht, false)
+  t.equal(discovery.dht, null)
   discovery.destroy(function () {
     t.pass()
   })

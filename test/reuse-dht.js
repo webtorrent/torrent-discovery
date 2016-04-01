@@ -10,11 +10,11 @@ test('re-use dht, verify that peers are filtered', function (t) {
 
   var dht = new DHT()
   var discovery = new Discovery({
+    infoHash: infoHash1,
     peerId: hat(160),
     port: 6000,
     dht: dht
   })
-  discovery.setTorrent(infoHash1)
 
   discovery.once('peer', function (addr) {
     t.equal(addr, '1.2.3.4:8000')

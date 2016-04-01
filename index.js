@@ -3,7 +3,6 @@ module.exports = Discovery
 var debug = require('debug')('torrent-discovery')
 var DHT = require('bittorrent-dht/client') // empty object in browser
 var EventEmitter = require('events').EventEmitter
-var extend = require('xtend')
 var inherits = require('inherits')
 var parallel = require('run-parallel')
 var Tracker = require('bittorrent-tracker/client')
@@ -16,16 +15,22 @@ function Discovery (opts) {
   EventEmitter.call(self)
 
   if (!opts.peerId) throw new Error('peerId required')
+  if (!opts.infoHash) throw new Error('infoHash required')
   if (!process.browser && !opts.port) throw new Error('port required')
 
-  self.peerId = opts.peerId
+  self.peerId = typeof opts.peerId === 'string'
+    ? opts.peerId
+    : opts.peerId.toString('hex')
+  self.infoHash = typeof opts.infoHash === 'string'
+    ? opts.infoHash
+    : opts.infoHash.toString('hex')
   self.port = opts.port // torrent port
-  self.infoHash = null
+
   self.destroyed = false
 
   self._announce = opts.announce || []
   self._intervalMs = opts.intervalMs || (15 * 60 * 1000)
-  self._torrent = null
+  self._trackerOpts = null
   self._dhtAnnouncing = false
   self._dhtTimeout = false
   self._internalDHT = false // is the DHT created internally?
@@ -48,17 +53,18 @@ function Discovery (opts) {
   }
 
   if (opts.tracker === false) {
-    self.tracker = false
+    self.tracker = null
+  } else if (opts.tracker && typeof opts.tracker === 'object') {
+    self.tracker = self._createTracker(opts.tracker)
   } else {
-    self.tracker = true
-    self._trackerOpts = opts.tracker
+    self.tracker = self._createTracker()
   }
 
   if (opts.dht === false || typeof DHT !== 'function') {
-    self.dht = false
+    self.dht = null
   } else if (opts.dht && typeof opts.dht.addNode === 'function') {
     self.dht = opts.dht
-  } else if (typeof opts.dht === 'object') {
+  } else if (opts.dht && typeof opts.dht === 'object') {
     self.dht = createDHT(opts.dhtPort, opts.dht)
   } else {
     self.dht = createDHT(opts.dhtPort)
@@ -66,6 +72,7 @@ function Discovery (opts) {
 
   if (self.dht) {
     self.dht.on('peer', self._onDHTPeer)
+    self._dhtAnnounce()
   }
 
   function createDHT (port, opts) {
@@ -78,46 +85,17 @@ function Discovery (opts) {
   }
 }
 
-Discovery.prototype.setTorrent = function (torrent) {
-  var self = this
-
-  if (!self.infoHash && (typeof torrent === 'string' || Buffer.isBuffer(torrent))) {
-    self.infoHash = typeof torrent === 'string'
-      ? torrent
-      : torrent.toString('hex')
-  } else if (!self._torrent && torrent && torrent.infoHash) {
-    self._torrent = torrent
-    self.infoHash = typeof torrent.infoHash === 'string'
-      ? torrent.infoHash
-      : torrent.infoHash.toString('hex')
-  } else {
-    return
-  }
-
-  debug('setTorrent %s', self.infoHash)
-
-  // If tracker exists, then it was created with just infoHash. Set torrent length
-  // so client can report correct information about uploads.
-  if (self.tracker && self.tracker !== true) {
-    self.tracker.torrentLength = torrent.length
-  } else {
-    self._createTracker()
-  }
-
-  self._dhtAnnounce()
-}
-
 Discovery.prototype.updatePort = function (port) {
   var self = this
   if (port === self.port) return
   self.port = port
 
-  self._dhtAnnounce()
+  if (self.dht) self._dhtAnnounce()
 
-  if (self.tracker && self.tracker !== true) {
+  if (self.tracker) {
     self.tracker.stop()
     self.tracker.destroy(function () {
-      self._createTracker()
+      self.tracker = self._createTracker()
     })
   }
 }
@@ -131,7 +109,7 @@ Discovery.prototype.destroy = function (cb) {
 
   var tasks = []
 
-  if (self.tracker && self.tracker !== true) {
+  if (self.tracker) {
     self.tracker.stop()
     self.tracker.removeListener('warning', self._onWarning)
     self.tracker.removeListener('error', self._onError)
@@ -160,28 +138,30 @@ Discovery.prototype.destroy = function (cb) {
   self.dht = null
   self.tracker = null
   self._announce = null
-  self._torrent = null
 }
 
-Discovery.prototype._createTracker = function () {
+Discovery.prototype._createTracker = function (opts) {
   var self = this
-  if (!self.tracker) return
+  if (opts) self._trackerOpts = opts // re-used when tracker is re-created
 
-  var torrent = extend({}, self._torrent || { infoHash: self.infoHash })
-  torrent.announce = self._announce.concat(torrent.announce || [])
+  var torrent = {
+    infoHash: self.infoHash,
+    announce: self._announce
+  }
 
-  self.tracker = new Tracker(self.peerId, self.port, torrent, self._trackerOpts)
-  self.tracker.on('warning', self._onWarning)
-  self.tracker.on('error', self._onError)
-  self.tracker.on('peer', self._onTrackerPeer)
-  self.tracker.on('update', self._onTrackerAnnounce)
-  self.tracker.setInterval(self._intervalMs)
-  self.tracker.start()
+  var tracker = new Tracker(self.peerId, self.port, torrent, self._trackerOpts)
+  tracker.on('warning', self._onWarning)
+  tracker.on('error', self._onError)
+  tracker.on('peer', self._onTrackerPeer)
+  tracker.on('update', self._onTrackerAnnounce)
+  tracker.setInterval(self._intervalMs)
+  tracker.start()
+  return tracker
 }
 
 Discovery.prototype._dhtAnnounce = function () {
   var self = this
-  if (!self.port || !self.infoHash || !self.dht || self._dhtAnnouncing) return
+  if (self._dhtAnnouncing) return
   debug('dht announce')
 
   self._dhtAnnouncing = true
@@ -198,6 +178,7 @@ Discovery.prototype._dhtAnnounce = function () {
       self._dhtTimeout = setTimeout(function () {
         self._dhtAnnounce()
       }, getRandomTimeout())
+      if (self._dhtTimeout.unref) self._dhtTimeout.unref()
     }
   })
 

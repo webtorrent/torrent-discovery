@@ -7,12 +7,12 @@ test('initialize with dht', function (t) {
   t.plan(5)
   var dht = new DHT({ bootstrap: false })
   var discovery = new Discovery({
+    infoHash: hat(160),
     peerId: hat(160),
     port: 6000,
     dht: dht,
     intervalMs: 1000
   })
-  discovery.setTorrent(hat(160))
 
   var _dhtAnnounce = discovery._dhtAnnounce
   var num = 0
