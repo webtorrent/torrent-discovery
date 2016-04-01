@@ -119,7 +119,7 @@ Discovery.prototype.updatePort = function (port) {
   }
 }
 
-Discovery.prototype.stop = function (cb) {
+Discovery.prototype.destroy = function (cb) {
   var self = this
   self.destroyed = true
   clearTimeout(self._dhtTimeout)

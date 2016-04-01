@@ -11,7 +11,7 @@ test('initialize with dht', function (t) {
     port: 6000,
     dht: dht
   })
-  discovery.stop(function () {
+  discovery.destroy(function () {
     dht.destroy(function () {
       t.pass()
     })
@@ -24,7 +24,7 @@ test('initialize with default dht', function (t) {
     peerId: hat(160),
     port: 6000
   })
-  discovery.stop(function () {
+  discovery.destroy(function () {
     t.pass()
   })
 })
@@ -37,7 +37,7 @@ test('initialize without dht', function (t) {
     dht: false
   })
   t.equal(discovery.dht, false)
-  discovery.stop(function () {
+  discovery.destroy(function () {
     t.pass()
   })
 })

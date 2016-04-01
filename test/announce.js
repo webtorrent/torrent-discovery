@@ -21,7 +21,7 @@ test('initialize with dht', function (t) {
     t.pass('called once after 1000ms')
     _dhtAnnounce.call(discovery)
     if (num === 4) {
-      discovery.stop(function () {
+      discovery.destroy(function () {
         dht.destroy(function () {
           t.pass()
         })

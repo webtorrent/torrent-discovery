@@ -72,7 +72,7 @@ Later, when you get the full torrent metadata (parsed via [parse-torrent](https:
 When the port that the torrent client is listening on changes, call this method to
 reannounce to the tracker and DHT with the new port.
 
-#### `discovery.stop()`
+#### `discovery.destroy()`
 
 Destroy and cleanup the DHT and tracker instances.
 

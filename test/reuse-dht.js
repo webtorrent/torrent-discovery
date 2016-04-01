@@ -25,7 +25,7 @@ test('re-use dht, verify that peers are filtered', function (t) {
   discovery.once('peer', function (addr) {
     t.equal(addr, '4.5.6.7:8000')
 
-    discovery.stop(function () {
+    discovery.destroy(function () {
       dht.destroy(function () {
         t.pass()
       })
