@@ -6,7 +6,6 @@ var EventEmitter = require('events').EventEmitter
 var extend = require('xtend')
 var inherits = require('inherits')
 var parallel = require('run-parallel')
-var reemit = require('re-emitter')
 var Tracker = require('bittorrent-tracker/client')
 
 inherits(Discovery, EventEmitter)
@@ -61,7 +60,12 @@ function Discovery (opts) {
   function createDHT (port, opts) {
     self._internalDHT = true
     var dht = new DHT(opts)
-    reemit(dht, self, ['warning', 'error'])
+    dht.on('warning', function (err) {
+      self.emit('warning', err)
+    })
+    dht.on('error', function (err) {
+      self.emit('error', err)
+    })
     dht.listen(port)
     return dht
   }
@@ -143,14 +147,22 @@ Discovery.prototype._createTracker = function () {
   var self = this
   if (!self.tracker) return
 
-  var torrent = self.torrent
-    ? extend({ announce: [] }, self.torrent)
-    : { infoHash: self.infoHash, announce: [] }
+  var torrent = extend({ announce: [] }, self.torrent || { infoHash: self.infoHash })
 
-  if (self.announce) torrent.announce = torrent.announce.concat(self.announce)
+  if (self.announce) {
+    torrent.announce = torrent.announce.concat(self.announce)
+  }
 
   self.tracker = new Tracker(self.peerId, self.port, torrent, self._trackerOpts)
-  reemit(self.tracker, self, ['peer', 'warning', 'error'])
+  self.tracker.on('peer', function (peer) {
+    self.emit('peer', peer)
+  })
+  self.tracker.on('warning', function (err) {
+    self.emit('warning', err)
+  })
+  self.tracker.on('error', function (err) {
+    self.emit('error', err)
+  })
   self.tracker.setInterval(self._intervalMs)
   self.tracker.on('update', onUpdate)
   self.tracker.start()
