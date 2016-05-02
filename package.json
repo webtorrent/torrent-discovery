@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "hat": "0.0.3",
-    "standard": "^6.0.4",
+    "standard": "^7.0.0",
     "tape": "^4.0.0"
   },
   "keywords": [
