@@ -102,6 +102,12 @@ Discovery.prototype.updatePort = function (port) {
   }
 }
 
+Discovery.prototype.complete = function (opts) {
+  if (this.tracker) {
+    this.tracker.complete(opts)
+  }
+}
+
 Discovery.prototype.destroy = function (cb) {
   var self = this
   if (self.destroyed) return
@@ -143,21 +149,19 @@ Discovery.prototype.destroy = function (cb) {
 }
 
 Discovery.prototype._createTracker = function () {
-  var self = this
-
-  var opts = extend(self._trackerOpts, {
-    infoHash: self.infoHash,
-    announce: self._announce,
-    peerId: self.peerId,
-    port: self._port
+  var opts = extend(this._trackerOpts, {
+    infoHash: this.infoHash,
+    announce: this._announce,
+    peerId: this.peerId,
+    port: this._port
   })
 
   var tracker = new Tracker(opts)
-  tracker.on('warning', self._onWarning)
-  tracker.on('error', self._onError)
-  tracker.on('peer', self._onTrackerPeer)
-  tracker.on('update', self._onTrackerAnnounce)
-  tracker.setInterval(self._intervalMs)
+  tracker.on('warning', this._onWarning)
+  tracker.on('error', this._onError)
+  tracker.on('peer', this._onTrackerPeer)
+  tracker.on('update', this._onTrackerAnnounce)
+  tracker.setInterval(this._intervalMs)
   tracker.start()
   return tracker
 }
