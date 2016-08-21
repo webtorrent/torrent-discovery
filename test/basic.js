@@ -1,14 +1,14 @@
 var Discovery = require('../')
 var DHT = require('bittorrent-dht')
-var hat = require('hat')
+var randombytes = require('randombytes')
 var test = require('tape')
 
 test('initialize with dht', function (t) {
   t.plan(1)
   var dht = new DHT()
   var discovery = new Discovery({
-    infoHash: hat(160),
-    peerId: hat(160),
+    infoHash: randombytes(20),
+    peerId: randombytes(20),
     port: 6000,
     dht: dht
   })
@@ -22,8 +22,8 @@ test('initialize with dht', function (t) {
 test('initialize with default dht', function (t) {
   t.plan(1)
   var discovery = new Discovery({
-    infoHash: hat(160),
-    peerId: hat(160),
+    infoHash: randombytes(20),
+    peerId: randombytes(20),
     port: 6000
   })
   discovery.destroy(function () {
@@ -34,8 +34,8 @@ test('initialize with default dht', function (t) {
 test('initialize without dht', function (t) {
   t.plan(2)
   var discovery = new Discovery({
-    infoHash: hat(160),
-    peerId: hat(160),
+    infoHash: randombytes(20),
+    peerId: randombytes(20),
     port: 6000,
     dht: false
   })

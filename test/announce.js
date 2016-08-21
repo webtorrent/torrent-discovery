@@ -1,14 +1,14 @@
-var Discovery = require('../')
 var DHT = require('bittorrent-dht')
-var hat = require('hat')
+var Discovery = require('../')
+var randombytes = require('randombytes')
 var test = require('tape')
 
 test('initialize with dht', function (t) {
   t.plan(5)
   var dht = new DHT({ bootstrap: false })
   var discovery = new Discovery({
-    infoHash: hat(160),
-    peerId: hat(160),
+    infoHash: randombytes(20),
+    peerId: randombytes(20),
     port: 6000,
     dht: dht,
     intervalMs: 1000

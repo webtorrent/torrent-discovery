@@ -1,17 +1,17 @@
 var Discovery = require('../')
 var DHT = require('bittorrent-dht')
-var hat = require('hat')
+var randombytes = require('randombytes')
 var test = require('tape')
 
 test('re-use dht, verify that peers are filtered', function (t) {
   t.plan(3)
-  var infoHash1 = new Buffer(hat(160), 'hex')
-  var infoHash2 = new Buffer(hat(160), 'hex')
+  var infoHash1 = randombytes(20)
+  var infoHash2 = randombytes(20)
 
   var dht = new DHT()
   var discovery = new Discovery({
     infoHash: infoHash1,
-    peerId: hat(160),
+    peerId: randombytes(20),
     port: 6000,
     dht: dht
   })
