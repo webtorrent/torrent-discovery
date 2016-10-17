@@ -55,9 +55,12 @@ function Discovery (opts) {
     if (net.isIPv6(peer.host)) {
       host = '[' + peer.host + ']'
     }
-    self.emit('peer', host + ':' + peer.port)
+    var addr = host + ':' + peer.port
+    debug('DHT peer: ' + addr)
+    self.emit('peer', addr)
   }
   self._onTrackerPeer = function (peer) {
+    debug('Tracker peer: ' + peer)
     self.emit('peer', peer)
   }
   self._onTrackerAnnounce = function () {
