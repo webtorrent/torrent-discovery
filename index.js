@@ -201,7 +201,7 @@ Discovery.prototype._createTracker = function () {
 
 Discovery.prototype._dhtAnnounce = function (dht) {
   var self = this
-  var field = '_dhtAnnouncing' + dht.ipv6 ? '6' : '';
+  var field = '_dhtAnnouncing' + (dht.ipv6 ? '6' : '');
   if (self[field]) return
   debug('dht (IPv6: ' + dht.ipv6 + ') announce')
 
