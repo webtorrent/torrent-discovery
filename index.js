@@ -6,6 +6,7 @@ var EventEmitter = require('events').EventEmitter
 var extend = require('xtend')
 var inherits = require('inherits')
 var parallel = require('run-parallel')
+var net = require('net')
 var Tracker = require('bittorrent-tracker/client')
 
 inherits(Discovery, EventEmitter)
@@ -33,8 +34,13 @@ function Discovery (opts) {
   self._intervalMs = opts.intervalMs || (15 * 60 * 1000)
   self._trackerOpts = null
   self._dhtAnnouncing = false
+  self._dht6Announcing = false
   self._dhtTimeout = false
   self._internalDHT = false // is the DHT created internally?
+  self._internalDHT6 = false
+  self.dhtPort = null
+  self.dht = null;
+  self.dht6 = null;
 
   self._onWarning = function (err) {
     self.emit('warning', err)
@@ -44,7 +50,12 @@ function Discovery (opts) {
   }
   self._onDHTPeer = function (peer, infoHash) {
     if (infoHash.toString('hex') !== self.infoHash) return
-    self.emit('peer', peer.host + ':' + peer.port)
+
+    var host = peer.host
+    if (net.isIPv6(peer.host)) {
+      host = '[' + peer.host + ']'
+    }
+    self.emit('peer', host + ':' + peer.port)
   }
   self._onTrackerPeer = function (peer) {
     self.emit('peer', peer)
@@ -62,37 +73,48 @@ function Discovery (opts) {
     self.tracker = self._createTracker()
   }
 
-  if (opts.dht === false || typeof DHT !== 'function') {
-    self.dht = null
-  } else if (opts.dht && typeof opts.dht.addNode === 'function') {
-    self.dht = opts.dht
-  } else if (opts.dht && typeof opts.dht === 'object') {
-    self.dht = createDHT(opts.dhtPort, opts.dht)
-  } else {
-    self.dht = createDHT(opts.dhtPort)
+  initDHT('dht')
+  initDHT('dht6')
+
+
+  function initDHT(field) {
+
+    if (opts[field] === false || typeof DHT !== 'function') {
+      self[field] = null
+    } else if (opts[field] && typeof opts[field].addNode === 'function') {
+      self[field] = opts[field]
+    } else if (opts[field] && typeof opts[field] === 'object') {
+      self[field] = createDHT(opts.dhtPort, field, opts[field])
+    } else {
+      self[field] = createDHT(opts.dhtPort, field);
+    }
+
+    if (self[field]) {
+      self[field].on('peer', self._onDHTPeer)
+      self._dhtAnnounce(self[field])
+    }
   }
 
-  if (self.dht) {
-    self.dht.on('peer', self._onDHTPeer)
-    self._dhtAnnounce()
-  }
-
-  function createDHT (port, opts) {
+  function createDHT (port, field, opts) {
+    if (!opts) { opts = {} }
+    opts.ipv6 = field === 'dht6'
     var dht = new DHT(opts)
     dht.on('warning', self._onWarning)
     dht.on('error', self._onError)
-    dht.listen(port)
-    self._internalDHT = true
+    dht.listen(port);
+
+    self[field === 'dht6' ? '_internalDHT6' : '_internalDHT'] = true
     return dht
   }
 }
 
-Discovery.prototype.updatePort = function (port) {
+Discovery.prototype.updatePort = function (port, ipv6) {
   var self = this
   if (port === self._port) return
   self._port = port
 
-  if (self.dht) self._dhtAnnounce()
+  if (self.dht)  { self._dhtAnnounce(self.dht)  }
+  if (self.dht6) { self._dhtAnnounce(self.dht6) }
 
   if (self.tracker) {
     self.tracker.stop()
@@ -131,21 +153,32 @@ Discovery.prototype.destroy = function (cb) {
   if (self.dht) {
     self.dht.removeListener('peer', self._onDHTPeer)
   }
+  if (self.dht6) {
+    self.dht6.removeListener('peer', self._onDHTPeer)
+  }
 
   if (self._internalDHT) {
-    self.dht.removeListener('warning', self._onWarning)
-    self.dht.removeListener('error', self._onError)
-    tasks.push(function (cb) {
-      self.dht.destroy(cb)
-    })
+    self._cleanupDHT(self.dht, tasks)
+  }
+  if (self._internalDHT6) {
+    self._cleanupDHT(self.dht6, tasks)
   }
 
   parallel(tasks, cb)
 
   // cleanup
   self.dht = null
+  self.dht6 = null
   self.tracker = null
   self._announce = null
+}
+
+Discovery.prototype._cleanupDHT = function(dht, tasks) {
+  dht.removeListener('warning', this._onWarning)
+  dht.removeListener('error', this._onError)
+  tasks.push(function (cb) {
+    dht.destroy(cb)
+  })
 }
 
 Discovery.prototype._createTracker = function () {
@@ -166,24 +199,25 @@ Discovery.prototype._createTracker = function () {
   return tracker
 }
 
-Discovery.prototype._dhtAnnounce = function () {
+Discovery.prototype._dhtAnnounce = function (dht) {
   var self = this
-  if (self._dhtAnnouncing) return
-  debug('dht announce')
+  var field = '_dhtAnnouncing' + dht.ipv6 ? '6' : '';
+  if (self[field]) return
+  debug('dht (IPv6: ' + dht.ipv6 + ') announce')
 
-  self._dhtAnnouncing = true
+  self[field] = true
   clearTimeout(self._dhtTimeout)
 
-  self.dht.announce(self.infoHash, self._port, function (err) {
-    self._dhtAnnouncing = false
-    debug('dht announce complete')
+  dht.announce(self.infoHash, self._port, function (err) {
+    self[field] = false
+    debug('dht (IPv6: ' + dht.ipv6 + ') announce complete')
 
     if (err) self.emit('warning', err)
-    self.emit('dhtAnnounce')
+    self.emit('dhtAnnounce', dht)
 
     if (!self.destroyed) {
       self._dhtTimeout = setTimeout(function () {
-        self._dhtAnnounce()
+        self._dhtAnnounce(dht)
       }, getRandomTimeout())
       if (self._dhtTimeout.unref) self._dhtTimeout.unref()
     }
