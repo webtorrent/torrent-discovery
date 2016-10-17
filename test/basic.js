@@ -3,11 +3,11 @@ var DHT = require('bittorrent-dht')
 var randombytes = require('randombytes')
 var test = require('tape')
 var common = require('./common')
-/*var log = require('why-is-node-running')
+/* var log = require('why-is-node-running')
 
 setInterval(function () {
   log() // logs out active handles that are keeping node running
-}, 5000)*/
+}, 5000) */
 
 common.wrapTest(test, 'initialize with dht', function (t, ipv6) {
   t.plan(1)
@@ -55,7 +55,7 @@ common.wrapTest(test, 'initialize without dht', function (t, ipv6) {
   })
 })
 
-test('use ipv4 and ipv6 together', function(t) {
+test('use ipv4 and ipv6 together', function (t) {
   t.plan(3)
 
   var dhtv4 = new DHT({ipv6: false})

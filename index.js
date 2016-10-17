@@ -39,8 +39,8 @@ function Discovery (opts) {
   self._internalDHT = false // is the DHT created internally?
   self._internalDHT6 = false
   self.dhtPort = null
-  self.dht = null;
-  self.dht6 = null;
+  self.dht = null
+  self.dht6 = null
 
   self._onWarning = function (err) {
     self.emit('warning', err)
@@ -76,9 +76,7 @@ function Discovery (opts) {
   initDHT('dht')
   initDHT('dht6')
 
-
-  function initDHT(field) {
-
+  function initDHT (field) {
     if (opts[field] === false || typeof DHT !== 'function') {
       self[field] = null
     } else if (opts[field] && typeof opts[field].addNode === 'function') {
@@ -86,7 +84,7 @@ function Discovery (opts) {
     } else if (opts[field] && typeof opts[field] === 'object') {
       self[field] = createDHT(opts.dhtPort, field, opts[field])
     } else {
-      self[field] = createDHT(opts.dhtPort, field);
+      self[field] = createDHT(opts.dhtPort, field)
     }
 
     if (self[field]) {
@@ -101,7 +99,7 @@ function Discovery (opts) {
     var dht = new DHT(opts)
     dht.on('warning', self._onWarning)
     dht.on('error', self._onError)
-    dht.listen(port);
+    dht.listen(port)
 
     self[field === 'dht6' ? '_internalDHT6' : '_internalDHT'] = true
     return dht
@@ -113,7 +111,7 @@ Discovery.prototype.updatePort = function (port, ipv6) {
   if (port === self._port) return
   self._port = port
 
-  if (self.dht)  { self._dhtAnnounce(self.dht)  }
+  if (self.dht) { self._dhtAnnounce(self.dht) }
   if (self.dht6) { self._dhtAnnounce(self.dht6) }
 
   if (self.tracker) {
@@ -173,7 +171,7 @@ Discovery.prototype.destroy = function (cb) {
   self._announce = null
 }
 
-Discovery.prototype._cleanupDHT = function(dht, tasks) {
+Discovery.prototype._cleanupDHT = function (dht, tasks) {
   dht.removeListener('warning', this._onWarning)
   dht.removeListener('error', this._onError)
   tasks.push(function (cb) {
@@ -201,7 +199,7 @@ Discovery.prototype._createTracker = function () {
 
 Discovery.prototype._dhtAnnounce = function (dht) {
   var self = this
-  var field = '_dhtAnnouncing' + (dht.ipv6 ? '6' : '');
+  var field = '_dhtAnnouncing' + (dht.ipv6 ? '6' : '')
   if (self[field]) return
   debug('dht (IPv6: ' + dht.ipv6 + ') announce')
 
