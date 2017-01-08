@@ -44,10 +44,10 @@ function Discovery (opts) {
   }
   self._onDHTPeer = function (peer, infoHash) {
     if (infoHash.toString('hex') !== self.infoHash) return
-    self.emit('peer', peer.host + ':' + peer.port)
+    self.emit('peer', peer.host + ':' + peer.port, 'dht')
   }
   self._onTrackerPeer = function (peer) {
-    self.emit('peer', peer)
+    self.emit('peer', peer, 'tracker')
   }
   self._onTrackerAnnounce = function () {
     self.emit('trackerAnnounce')

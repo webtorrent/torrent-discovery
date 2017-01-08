@@ -4,7 +4,7 @@ var randombytes = require('randombytes')
 var test = require('tape')
 
 test('re-use dht, verify that peers are filtered', function (t) {
-  t.plan(3)
+  t.plan(5)
   var infoHash1 = randombytes(20)
   var infoHash2 = randombytes(20)
 
@@ -16,14 +16,16 @@ test('re-use dht, verify that peers are filtered', function (t) {
     dht: dht
   })
 
-  discovery.once('peer', function (addr) {
+  discovery.once('peer', function (addr, source) {
     t.equal(addr, '1.2.3.4:8000')
+    t.equal(source, 'dht')
   })
   dht.emit('peer', { host: '1.2.3.4', port: '8000' }, infoHash1)
 
   // Only peers for `infoHash1` should get emitted, none from `infoHash2`
-  discovery.once('peer', function (addr) {
+  discovery.once('peer', function (addr, source) {
     t.equal(addr, '4.5.6.7:8000')
+    t.equal(source, 'dht')
 
     discovery.destroy(function () {
       dht.destroy(function () {
