@@ -86,9 +86,9 @@ Destroy and cleanup the DHT and tracker instances.
 
 ### events
 
-### `discovery.on('peer', function (peer) {})`
+### `discovery.on('peer', function (peer, source) {})`
 
-Emitted whenever a new peer is discovered.
+Emitted whenever a new peer is discovered. Source is either 'tracker' or 'dht' based on peer source.
 
 **In node**, `peer` is a string in the form `12:34:56:78:4000`.
 
