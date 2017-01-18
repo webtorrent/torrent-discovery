@@ -50,6 +50,7 @@ Optional options are:
   announce: [],  // force list of announce urls to use (from magnet uri)
   dht: true,     // use dht? optionally, this can be an `opts` object, or a DHT instance to use (can be reused for multiple torrents)
   dhtPort: 0,    // custom listen port for the DHT instance (not used if DHT instance is given via `opts.dht`)
+  userAgent: '', // User-Agent header for http requests
   tracker: true, // use trackers? optionally, this can be an `opts` object
 }
 ```

@@ -19,9 +19,6 @@ function Discovery (opts) {
   if (!opts.infoHash) throw new Error('Option `infoHash` is required')
   if (!process.browser && !opts.port) throw new Error('Option `port` is required')
 
-  self.userAgent = typeof opts.userAgent === 'string'
-    ? opts.userAgent
-    : ''
   self.peerId = typeof opts.peerId === 'string'
     ? opts.peerId
     : opts.peerId.toString('hex')
@@ -29,6 +26,7 @@ function Discovery (opts) {
     ? opts.infoHash
     : opts.infoHash.toString('hex')
   self._port = opts.port // torrent port
+  self._userAgent = opts.userAgent // User-Agent header for http requests
 
   self.destroyed = false
 
@@ -153,11 +151,11 @@ Discovery.prototype.destroy = function (cb) {
 
 Discovery.prototype._createTracker = function () {
   var opts = extend(this._trackerOpts, {
-    userAgent: this.userAgent,
     infoHash: this.infoHash,
     announce: this._announce,
     peerId: this.peerId,
-    port: this._port
+    port: this._port,
+    userAgent: this._userAgent
   })
 
   var tracker = new Tracker(opts)
