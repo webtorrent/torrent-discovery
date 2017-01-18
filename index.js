@@ -19,6 +19,9 @@ function Discovery (opts) {
   if (!opts.infoHash) throw new Error('Option `infoHash` is required')
   if (!process.browser && !opts.port) throw new Error('Option `port` is required')
 
+  self.userAgent = typeof opts.userAgent === 'string'
+    ? opts.userAgent
+    : ''
   self.peerId = typeof opts.peerId === 'string'
     ? opts.peerId
     : opts.peerId.toString('hex')
@@ -150,6 +153,7 @@ Discovery.prototype.destroy = function (cb) {
 
 Discovery.prototype._createTracker = function () {
   var opts = extend(this._trackerOpts, {
+    userAgent: this.userAgent,
     infoHash: this.infoHash,
     announce: this._announce,
     peerId: this.peerId,
