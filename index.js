@@ -125,7 +125,10 @@ Discovery.prototype.destroy = function (cb) {
     self.tracker.removeListener('peer', self._onTrackerPeer)
     self.tracker.removeListener('update', self._onTrackerAnnounce)
     tasks.push(function (cb) {
-      self.tracker.destroy(cb)
+      process.nextTick(function () {
+        self.tracker.destroy(cb)
+        self.tracker = null // cleanup
+      })
     })
   }
 
@@ -145,7 +148,6 @@ Discovery.prototype.destroy = function (cb) {
 
   // cleanup
   self.dht = null
-  self.tracker = null
   self._announce = null
 }
 
