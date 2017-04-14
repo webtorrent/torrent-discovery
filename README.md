@@ -1,7 +1,7 @@
 # torrent-discovery [![travis][travis-image]][travis-url] [![npm][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url] [![javascript style guide][standard-image]][standard-url]
 
-[travis-image]: https://img.shields.io/travis/feross/torrent-discovery/master.svg
-[travis-url]: https://travis-ci.org/feross/torrent-discovery
+[travis-image]: https://img.shields.io/travis/webtorrent/torrent-discovery/master.svg
+[travis-url]: https://travis-ci.org/webtorrent/torrent-discovery
 [npm-image]: https://img.shields.io/npm/v/torrent-discovery.svg
 [npm-url]: https://npmjs.org/package/torrent-discovery
 [downloads-image]: https://img.shields.io/npm/dm/torrent-discovery.svg
@@ -11,8 +11,8 @@
 
 ### Discover BitTorrent and WebTorrent peers
 
-This module bundles [bittorrent-dht](https://github.com/feross/bittorrent-dht) and
-[bittorrent-tracker](https://github.com/feross/bittorrent-tracker) clients and exposes a
+This module bundles [bittorrent-dht](https://www.npmjs.com/package/bittorrent-dht) and
+[bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker) clients and exposes a
 single API for discovering BitTorrent peers via both discovery methods.
 
 ## features
@@ -57,8 +57,8 @@ Optional options are:
 }
 ```
 
-See the documentation for [bittorrent-dht](https://github.com/feross/bittorrent-dht) and
-[bittorrent-tracker](https://github.com/feross/bittorrent-tracker) for information on what
+See the documentation for [bittorrent-dht](https://www.npmjs.com/package/bittorrent-dht) and
+[bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker) for information on what
 options are available via the `opts` object.
 
 **This module automatically handles announcing on intervals, for maximum peer discovery.**
@@ -96,7 +96,7 @@ Emitted whenever a new peer is discovered. Source is either 'tracker' or 'dht' b
 **In node**, `peer` is a string in the form `12:34:56:78:4000`.
 
 **In the browser**, `peer` is an instance of
-[`simple-peer`](https://github.com/feross/simple-peer), a small wrapper around a WebRTC
+[`simple-peer`](https://www.npmjs.com/package/simple-peer), a small wrapper around a WebRTC
 peer connection.
 
 ### `discovery.on('dhtAnnounce', function () {})`
@@ -114,5 +114,5 @@ Emitted when there is a fatal, unrecoverable DHT or tracker error.
 
 ## license
 
-MIT. Copyright (c) [Feross Aboukhadijeh](http://feross.org).
+MIT. Copyright (c) [Feross Aboukhadijeh](https://feross.org) and [WebTorrent, LLC](https://webtorrent.io).
 
