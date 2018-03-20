@@ -23,7 +23,7 @@ function Discovery (opts) {
     ? opts.peerId
     : opts.peerId.toString('hex')
   self.infoHash = typeof opts.infoHash === 'string'
-    ? opts.infoHash
+    ? opts.infoHash.toLowerCase()
     : opts.infoHash.toString('hex')
   self._port = opts.port // torrent port
   self._userAgent = opts.userAgent // User-Agent header for http requests
