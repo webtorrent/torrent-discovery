@@ -93,7 +93,7 @@ Destroy and cleanup the DHT and tracker instances.
 
 Emitted whenever a new peer is discovered. Source is either 'tracker' or 'dht' based on peer source.
 
-**In node**, `peer` is a string in the form `12:34:56:78:4000`.
+**In node**, `peer` is a string in the form ip:port `12.34.56.78:4000`.
 
 **In the browser**, `peer` is an instance of
 [`simple-peer`](https://www.npmjs.com/package/simple-peer), a small wrapper around a WebRTC
