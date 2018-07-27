@@ -89,7 +89,7 @@ Destroy and cleanup the DHT and tracker instances.
 
 ### events
 
-### `discovery.on('peer', function (peer, source) {})`
+### `discovery.on('peer', (peer, source) => {})`
 
 Emitted whenever a new peer is discovered. Source is either 'tracker' or 'dht' based on peer source.
 
@@ -99,20 +99,19 @@ Emitted whenever a new peer is discovered. Source is either 'tracker' or 'dht' b
 [`simple-peer`](https://www.npmjs.com/package/simple-peer), a small wrapper around a WebRTC
 peer connection.
 
-### `discovery.on('dhtAnnounce', function () {})`
+### `discovery.on('dhtAnnounce', () => {})`
 
 Emitted whenever an `announce` message has been sent to the DHT.
 
-### `discovery.on('warning', function (err) {})`
+### `discovery.on('warning', err => {})`
 
 Emitted when there is a non-fatal DHT or tracker error, like an inaccessible tracker
 server. Useful for logging. This is non-fatal.
 
-### `discovery.on('error', function (err) {})`
+### `discovery.on('error', err => {})`
 
 Emitted when there is a fatal, unrecoverable DHT or tracker error.
 
 ## license
 
 MIT. Copyright (c) [Feross Aboukhadijeh](https://feross.org) and [WebTorrent, LLC](https://webtorrent.io).
-

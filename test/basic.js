@@ -1,46 +1,46 @@
-var Discovery = require('../')
-var DHT = require('bittorrent-dht')
-var randombytes = require('randombytes')
-var test = require('tape')
+const Discovery = require('../')
+const DHT = require('bittorrent-dht')
+const randombytes = require('randombytes')
+const test = require('tape')
 
-test('initialize with dht', function (t) {
+test('initialize with dht', t => {
   t.plan(1)
-  var dht = new DHT()
-  var discovery = new Discovery({
+  const dht = new DHT()
+  const discovery = new Discovery({
     infoHash: randombytes(20),
     peerId: randombytes(20),
     port: 6000,
-    dht: dht
+    dht
   })
-  discovery.destroy(function () {
-    dht.destroy(function () {
+  discovery.destroy(() => {
+    dht.destroy(() => {
       t.pass()
     })
   })
 })
 
-test('initialize with default dht', function (t) {
+test('initialize with default dht', t => {
   t.plan(1)
-  var discovery = new Discovery({
+  const discovery = new Discovery({
     infoHash: randombytes(20),
     peerId: randombytes(20),
     port: 6000
   })
-  discovery.destroy(function () {
+  discovery.destroy(() => {
     t.pass()
   })
 })
 
-test('initialize without dht', function (t) {
+test('initialize without dht', t => {
   t.plan(2)
-  var discovery = new Discovery({
+  const discovery = new Discovery({
     infoHash: randombytes(20),
     peerId: randombytes(20),
     port: 6000,
     dht: false
   })
   t.equal(discovery.dht, null)
-  discovery.destroy(function () {
+  discovery.destroy(() => {
     t.pass()
   })
 })
