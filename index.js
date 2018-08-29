@@ -1,7 +1,6 @@
 const debug = require('debug')('torrent-discovery')
 const DHT = require('bittorrent-dht/client') // empty object in browser
 const EventEmitter = require('events').EventEmitter
-const extend = require('xtend')
 const parallel = require('run-parallel')
 const Tracker = require('bittorrent-tracker/client')
 
@@ -60,7 +59,7 @@ class Discovery extends EventEmitter {
     if (opts.tracker === false) {
       this.tracker = null
     } else if (opts.tracker && typeof opts.tracker === 'object') {
-      this._trackerOpts = extend(opts.tracker)
+      this._trackerOpts = Object.assign({}, opts.tracker)
       this.tracker = this._createTracker()
     } else {
       this.tracker = this._createTracker()
@@ -142,7 +141,7 @@ class Discovery extends EventEmitter {
   }
 
   _createTracker () {
-    const opts = extend(this._trackerOpts, {
+    const opts = Object.assign({}, this._trackerOpts, {
       infoHash: this.infoHash,
       announce: this._announce,
       peerId: this.peerId,
