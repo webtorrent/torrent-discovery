@@ -17,8 +17,7 @@
     "bittorrent-dht": "^9.0.0",
     "bittorrent-tracker": "^9.0.0",
     "debug": "^3.1.0",
-    "run-parallel": "^1.1.2",
-    "xtend": "^4.0.1"
+    "run-parallel": "^1.1.2"
   },
   "devDependencies": {
     "randombytes": "^2.0.3",
