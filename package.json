@@ -16,7 +16,7 @@
   "dependencies": {
     "bittorrent-dht": "^9.0.0",
     "bittorrent-tracker": "^9.0.0",
-    "debug": "^3.1.0",
+    "debug": "^4.0.0",
     "run-parallel": "^1.1.2"
   },
   "devDependencies": {
