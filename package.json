@@ -10,6 +10,7 @@
   "browser": {
     "bittorrent-dht/client": false
   },
+  "chromeapp": {},
   "bugs": {
     "url": "https://github.com/webtorrent/torrent-discovery/issues"
   },
