@@ -1,7 +1,7 @@
 {
   "name": "torrent-discovery",
   "description": "Discover BitTorrent and WebTorrent peers",
-  "version": "9.1.2",
+  "version": "9.2.0",
   "author": {
     "name": "WebTorrent, LLC",
     "email": "feross@webtorrent.io",
