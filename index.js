@@ -1,3 +1,4 @@
+/*! torrent-discovery. MIT License. WebTorrent LLC <https://webtorrent.io/opensource> */
 const debug = require('debug')('torrent-discovery')
 const DHT = require('bittorrent-dht/client') // empty object in browser
 const EventEmitter = require('events').EventEmitter
