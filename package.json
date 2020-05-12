@@ -23,7 +23,7 @@
   "devDependencies": {
     "randombytes": "^2.0.3",
     "standard": "*",
-    "tape": "^4.0.0"
+    "tape": "^5.0.0"
   },
   "keywords": [
     "webtorrent",
