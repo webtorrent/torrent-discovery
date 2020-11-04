@@ -4,6 +4,7 @@ const DHT = require('bittorrent-dht/client') // empty object in browser
 const EventEmitter = require('events').EventEmitter
 const parallel = require('run-parallel')
 const Tracker = require('bittorrent-tracker/client')
+const LSD = require('bittorrent-lsd')
 
 class Discovery extends EventEmitter {
   constructor (opts) {
@@ -47,6 +48,9 @@ class Discovery extends EventEmitter {
     this._onTrackerAnnounce = () => {
       this.emit('trackerAnnounce')
     }
+    this._onLSDPeer = (peer, infoHash) => {
+      this.emit('peer', peer, 'lsd')
+    }
 
     const createDHT = (port, opts) => {
       const dht = new DHT(opts)
@@ -79,6 +83,12 @@ class Discovery extends EventEmitter {
     if (this.dht) {
       this.dht.on('peer', this._onDHTPeer)
       this._dhtAnnounce()
+    }
+
+    if (opts.lsd === false) {
+      this.lsd = null
+    } else {
+      this.lsd = this._createLSD()
     }
   }
 
@@ -133,11 +143,21 @@ class Discovery extends EventEmitter {
       })
     }
 
+    if (this.lsd) {
+      this.lsd.removeListener('warning', this._onWarning)
+      this.lsd.removeListener('error', this._onError)
+      this.lsd.removeListener('peer', this._onLSDPeer)
+      tasks.push(cb => {
+        this.lsd.destroy(cb)
+      })
+    }
+
     parallel(tasks, cb)
 
     // cleanup
     this.dht = null
     this.tracker = null
+    this.lsd = null
     this._announce = null
   }
 
@@ -181,6 +201,21 @@ class Discovery extends EventEmitter {
         if (this._dhtTimeout.unref) this._dhtTimeout.unref()
       }
     })
+  }
+
+  _createLSD () {
+    const opts = Object.assign({}, {
+      infoHash: this.infoHash,
+      peerId: this.peerId,
+      port: this._port
+    })
+
+    const lsd = new LSD(opts)
+    lsd.on('warning', this._onWarning)
+    lsd.on('error', this._onError)
+    lsd.on('peer', this._onLSDPeer)
+    lsd.start()
+    return lsd
   }
 }
 

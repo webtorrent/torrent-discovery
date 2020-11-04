@@ -11,14 +11,13 @@
 
 ### Discover BitTorrent and WebTorrent peers
 
-This module bundles [bittorrent-dht](https://www.npmjs.com/package/bittorrent-dht) and
-[bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker) clients and exposes a
-single API for discovering BitTorrent peers via both discovery methods.
+This module bundles [bittorrent-dht](https://www.npmjs.com/package/bittorrent-dht),
+[bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker) and [bittorrent-lsd](https://www.npmjs.com/package/bittorrent-lsd) clients and exposes a single API for discovering BitTorrent peers via both discovery methods.
 
 ## features
 
 - simple API
-- find peers from trackers and the DHT
+- find peers from trackers, DHT and LSD
 - automatically announces, so other peers can discover us
 - can start finding peers with just an info hash, before full metadata is available
 
@@ -54,12 +53,12 @@ Optional options are:
   dhtPort: 0,    // custom listen port for the DHT instance (not used if DHT instance is given via `opts.dht`)
   userAgent: '', // User-Agent header for http requests
   tracker: true, // use trackers? optionally, this can be an `opts` object
+  lsd: true      // use lsd?
 }
 ```
 
-See the documentation for [bittorrent-dht](https://www.npmjs.com/package/bittorrent-dht) and
-[bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker) for information on what
-options are available via the `opts` object.
+See the documentation for [bittorrent-dht](https://www.npmjs.com/package/bittorrent-dht),
+[bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker) and [bittorrant-lsd](https://www.npmjs.com/package/bittorrent-lsd) for information on what options are available via the `opts` object.
 
 **This module automatically handles announcing on intervals, for maximum peer discovery.**
 
@@ -85,13 +84,13 @@ Optional `opts` object with the following options:
 
 ### `discovery.destroy()`
 
-Destroy and cleanup the DHT and tracker instances.
+Destroy and cleanup the DHT, tracker and LSD instances.
 
 ### events
 
 ### `discovery.on('peer', (peer, source) => {})`
 
-Emitted whenever a new peer is discovered. Source is either 'tracker' or 'dht' based on peer source.
+Emitted whenever a new peer is discovered. Source is either 'tracker', 'dht' or 'lsd' based on peer source.
 
 **In node**, `peer` is a string in the form `ip:port`, e.g. `12.34.56.78:4000`.
 
@@ -105,12 +104,12 @@ Emitted whenever an `announce` message has been sent to the DHT.
 
 ### `discovery.on('warning', err => {})`
 
-Emitted when there is a non-fatal DHT or tracker error, like an inaccessible tracker
+Emitted when there is a non-fatal DHT, tracker or LSD error, like an inaccessible tracker
 server. Useful for logging. This is non-fatal.
 
 ### `discovery.on('error', err => {})`
 
-Emitted when there is a fatal, unrecoverable DHT or tracker error.
+Emitted when there is a fatal, unrecoverable DHT, tracker or LSD error.
 
 ## license
 
