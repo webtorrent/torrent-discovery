@@ -12,7 +12,7 @@
 ### Discover BitTorrent and WebTorrent peers
 
 This module bundles [bittorrent-dht](https://www.npmjs.com/package/bittorrent-dht),
-[bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker) and [bittorrent-lsd](https://www.npmjs.com/package/bittorrent-lsd) clients and exposes a single API for discovering BitTorrent peers via both discovery methods.
+[bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker), and [bittorrent-lsd](https://www.npmjs.com/package/bittorrent-lsd) clients and exposes a single API for discovering BitTorrent peers via both discovery methods.
 
 ## features
 
@@ -84,13 +84,13 @@ Optional `opts` object with the following options:
 
 ### `discovery.destroy()`
 
-Destroy and cleanup the DHT, tracker and LSD instances.
+Destroy and cleanup the DHT, tracker, and LSD instances.
 
 ### events
 
 ### `discovery.on('peer', (peer, source) => {})`
 
-Emitted whenever a new peer is discovered. Source is either 'tracker', 'dht' or 'lsd' based on peer source.
+Emitted whenever a new peer is discovered. Source is either `'tracker'`, `'dht'`, or `'lsd'` based on peer source.
 
 **In node**, `peer` is a string in the form `ip:port`, e.g. `12.34.56.78:4000`.
 
@@ -104,12 +104,13 @@ Emitted whenever an `announce` message has been sent to the DHT.
 
 ### `discovery.on('warning', err => {})`
 
-Emitted when there is a non-fatal DHT, tracker or LSD error, like an inaccessible tracker
-server. Useful for logging. This is non-fatal.
+Emitted when there is a **non-fatal** DHT, tracker, or LSD error. For example, an
+inaccessible tracker server would be considered a warning. Useful for logging.
 
 ### `discovery.on('error', err => {})`
 
-Emitted when there is a fatal, unrecoverable DHT, tracker or LSD error.
+Emitted when there is a fatal, DHT, tracker, or LSD error. This is unrecoverable
+and the `discovery` object will be destroyed if this event is emitted.
 
 ## license
 
