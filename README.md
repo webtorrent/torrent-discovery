@@ -17,7 +17,7 @@ This module bundles [bittorrent-dht](https://www.npmjs.com/package/bittorrent-dh
 ## features
 
 - simple API
-- find peers from trackers, DHT and LSD
+- find peers from trackers, DHT, and LSD
 - automatically announces, so other peers can discover us
 - can start finding peers with just an info hash, before full metadata is available
 

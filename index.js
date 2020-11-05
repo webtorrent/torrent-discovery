@@ -85,7 +85,7 @@ class Discovery extends EventEmitter {
       this._dhtAnnounce()
     }
 
-    if (opts.lsd === false) {
+    if (opts.lsd === false || typeof LSD !== 'function') {
       this.lsd = null
     } else {
       this.lsd = this._createLSD()
