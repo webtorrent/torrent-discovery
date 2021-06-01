@@ -23,9 +23,9 @@
     "run-parallel": "^1.1.2"
   },
   "devDependencies": {
-    "randombytes": "^2.0.3",
+    "randombytes": "2.1.0",
     "standard": "*",
-    "tape": "^5.0.0"
+    "tape": "5.2.2"
   },
   "keywords": [
     "webtorrent",
