@@ -11,8 +11,7 @@
 
 ### Discover BitTorrent and WebTorrent peers
 
-This module bundles [bittorrent-dht](https://www.npmjs.com/package/bittorrent-dht),
-[bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker), and [bittorrent-lsd](https://www.npmjs.com/package/bittorrent-lsd) clients and exposes a single API for discovering BitTorrent peers via both discovery methods.
+This module bundles [bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker), [bittorrent-dht](https://www.npmjs.com/package/bittorrent-dht), and [bittorrent-lsd](https://www.npmjs.com/package/bittorrent-lsd) clients and exposes a single API for discovering BitTorrent peers.
 
 ## features
 
@@ -57,8 +56,7 @@ Optional options are:
 }
 ```
 
-See the documentation for [bittorrent-dht](https://www.npmjs.com/package/bittorrent-dht),
-[bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker) and [bittorrant-lsd](https://www.npmjs.com/package/bittorrent-lsd) for information on what options are available via the `opts` object.
+See the documentation for [bittorrent-tracker](https://www.npmjs.com/package/bittorrent-tracker), [bittorrent-dht](https://www.npmjs.com/package/bittorrent-dht), and [bittorrant-lsd](https://www.npmjs.com/package/bittorrent-lsd) for information on what options are available via the `opts` object.
 
 **This module automatically handles announcing on intervals, for maximum peer discovery.**
 
@@ -84,7 +82,7 @@ Optional `opts` object with the following options:
 
 ### `discovery.destroy()`
 
-Destroy and cleanup the DHT, tracker, and LSD instances.
+Destroy and cleanup the tracker, DHT, and LSD instances.
 
 ### events
 
@@ -104,12 +102,12 @@ Emitted whenever an `announce` message has been sent to the DHT.
 
 ### `discovery.on('warning', err => {})`
 
-Emitted when there is a **non-fatal** DHT, tracker, or LSD error. For example, an
+Emitted when there is a **non-fatal** tracker, DHT, or LSD error. For example, an
 inaccessible tracker server would be considered a warning. Useful for logging.
 
 ### `discovery.on('error', err => {})`
 
-Emitted when there is a fatal, DHT, tracker, or LSD error. This is unrecoverable
+Emitted when there is a fatal tracker, DHT, or LSD error. This is unrecoverable
 and the `discovery` object will be destroyed if this event is emitted.
 
 ## license
