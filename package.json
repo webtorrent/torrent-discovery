@@ -23,7 +23,9 @@
     "run-parallel": "^1.1.2"
   },
   "devDependencies": {
+    "@webtorrent/semantic-release-config": "1.0.5",
     "randombytes": "2.1.0",
+    "semantic-release": "17.4.4",
     "standard": "*",
     "tape": "5.2.2"
   },
@@ -67,10 +69,7 @@
   "renovate": {
     "extends": [
       "github>webtorrent/renovate-config"
-    ],
-    "lockFileMaintenance": {
-      "enabled": false
-    }
+    ]
   },
   "release": {
     "extends": "@webtorrent/semantic-release-config"
