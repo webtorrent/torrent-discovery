@@ -20,7 +20,7 @@
     "bittorrent-tracker": "^9.17.4",
     "bittorrent-lsd": "^1.1.1",
     "debug": "^4.3.2",
-    "run-parallel": "^1.1.2"
+    "run-parallel": "^1.2.0"
   },
   "devDependencies": {
     "@webtorrent/semantic-release-config": "1.0.5",
