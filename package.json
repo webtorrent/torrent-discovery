@@ -17,13 +17,13 @@
   },
   "dependencies": {
     "bittorrent-dht": "^10.0.2",
-    "bittorrent-tracker": "^9.17.4",
+    "bittorrent-tracker": "^9.18.0",
     "bittorrent-lsd": "^1.1.1",
     "debug": "^4.3.2",
     "run-parallel": "^1.2.0"
   },
   "devDependencies": {
-    "@webtorrent/semantic-release-config": "1.0.5",
+    "@webtorrent/semantic-release-config": "1.0.7",
     "randombytes": "2.1.0",
     "semantic-release": "17.4.5",
     "standard": "*",
