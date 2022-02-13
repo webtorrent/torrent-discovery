@@ -27,7 +27,7 @@
     "randombytes": "2.1.0",
     "semantic-release": "17.4.7",
     "standard": "*",
-    "tape": "5.5.1"
+    "tape": "5.5.2"
   },
   "keywords": [
     "webtorrent",
