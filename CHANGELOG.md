@@ -1,3 +1,10 @@
+## [9.4.8](https://github.com/webtorrent/torrent-discovery/compare/v9.4.7...v9.4.8) (2022-03-03)
+
+
+### Bug Fixes
+
+* **deps:** update dependency debug to ^4.3.3 ([#66](https://github.com/webtorrent/torrent-discovery/issues/66)) ([0e0b95d](https://github.com/webtorrent/torrent-discovery/commit/0e0b95d66abd19cd36c544e7092bb327848db172))
+
 ## [9.4.7](https://github.com/webtorrent/torrent-discovery/compare/v9.4.6...v9.4.7) (2021-10-29)
 
 
