@@ -1,3 +1,10 @@
+## [9.4.9](https://github.com/webtorrent/torrent-discovery/compare/v9.4.8...v9.4.9) (2022-03-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency bittorrent-tracker to ^9.18.4 ([8ace382](https://github.com/webtorrent/torrent-discovery/commit/8ace3824682170f4e393b49bb635969965162c0d))
+
 ## [9.4.8](https://github.com/webtorrent/torrent-discovery/compare/v9.4.7...v9.4.8) (2022-03-03)
 
 
