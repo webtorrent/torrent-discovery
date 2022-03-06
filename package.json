@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "bittorrent-dht": "^10.0.2",
-    "bittorrent-tracker": "^9.18.3",
+    "bittorrent-tracker": "^9.18.4",
     "bittorrent-lsd": "^1.1.1",
     "debug": "^4.3.3",
     "run-parallel": "^1.2.0"
