@@ -1,3 +1,10 @@
+## [9.4.13](https://github.com/webtorrent/torrent-discovery/compare/v9.4.12...v9.4.13) (2022-06-22)
+
+
+### Bug Fixes
+
+* **deps:** update webtorrent ([#79](https://github.com/webtorrent/torrent-discovery/issues/79)) ([79aabec](https://github.com/webtorrent/torrent-discovery/commit/79aabec64b6b94a2583fd24163d853f99ea6124a))
+
 ## [9.4.12](https://github.com/webtorrent/torrent-discovery/compare/v9.4.11...v9.4.12) (2022-05-11)
 
 
