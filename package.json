@@ -16,7 +16,7 @@
     "url": "https://github.com/webtorrent/torrent-discovery/issues"
   },
   "dependencies": {
-    "bittorrent-dht": "^10.0.4",
+    "bittorrent-dht": "^10.0.6",
     "bittorrent-tracker": "^9.19.0",
     "bittorrent-lsd": "^1.1.1",
     "debug": "^4.3.4",
