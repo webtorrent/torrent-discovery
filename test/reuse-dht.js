@@ -1,7 +1,7 @@
-const Discovery = require('../')
-const DHT = require('bittorrent-dht')
-const randombytes = require('randombytes')
-const test = require('tape')
+import Discovery from '../index.js'
+import DHT from 'bittorrent-dht'
+import randombytes from 'randombytes'
+import test from 'tape'
 
 test('re-use dht, verify that peers are filtered', t => {
   t.plan(5)
