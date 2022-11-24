@@ -1,12 +1,12 @@
 /*! torrent-discovery. MIT License. WebTorrent LLC <https://webtorrent.io/opensource> */
-import debugFactory from 'debug'
+import Debug from 'debug'
 import DHT from 'bittorrent-dht/client.js' // empty object in browser
 import { EventEmitter } from 'events'
 import parallel from 'run-parallel'
 import Tracker from 'bittorrent-tracker/client.js'
 import LSD from 'bittorrent-lsd'
 
-const debug = debugFactory('torrent-discovery')
+const debug = Debug('torrent-discovery')
 
 class Discovery extends EventEmitter {
   constructor (opts) {
