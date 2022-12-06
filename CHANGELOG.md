@@ -1,3 +1,23 @@
+# [10.0.0](https://github.com/webtorrent/torrent-discovery/compare/v9.4.15...v10.0.0) (2022-12-06)
+
+
+### Features
+
+* esm ([#87](https://github.com/webtorrent/torrent-discovery/issues/87)) ([83873a9](https://github.com/webtorrent/torrent-discovery/commit/83873a9e707691a0afb8af34b3b07824b6e84f01))
+
+
+### BREAKING CHANGES
+
+* ESM only
+
+* feat: esm
+
+* Update index.js
+
+Co-authored-by: Diego Rodríguez Baquero <github@diegorbaquero.com>
+
+Co-authored-by: Diego Rodríguez Baquero <github@diegorbaquero.com>
+
 ## [9.4.15](https://github.com/webtorrent/torrent-discovery/compare/v9.4.14...v9.4.15) (2022-12-05)
 
 
