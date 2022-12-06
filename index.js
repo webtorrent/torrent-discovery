@@ -1,10 +1,12 @@
 /*! torrent-discovery. MIT License. WebTorrent LLC <https://webtorrent.io/opensource> */
-const debug = require('debug')('torrent-discovery')
-const DHT = require('bittorrent-dht/client') // empty object in browser
-const EventEmitter = require('events').EventEmitter
-const parallel = require('run-parallel')
-const Tracker = require('bittorrent-tracker/client')
-const LSD = require('bittorrent-lsd')
+import Debug from 'debug'
+import DHT from 'bittorrent-dht/client.js' // empty object in browser
+import { EventEmitter } from 'events'
+import parallel from 'run-parallel'
+import Tracker from 'bittorrent-tracker/client.js'
+import LSD from 'bittorrent-lsd'
+
+const debug = Debug('torrent-discovery')
 
 class Discovery extends EventEmitter {
   constructor (opts) {
@@ -219,4 +221,4 @@ class Discovery extends EventEmitter {
   }
 }
 
-module.exports = Discovery
+export default Discovery
