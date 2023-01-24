@@ -1,3 +1,12 @@
+## [10.0.1](https://github.com/webtorrent/torrent-discovery/compare/v10.0.0...v10.0.1) (2023-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency bittorrent-dht to v11 ([#89](https://github.com/webtorrent/torrent-discovery/issues/89)) ([3eeb978](https://github.com/webtorrent/torrent-discovery/commit/3eeb978db585d931115a932f1d78b9f639a2f551))
+* **deps:** update dependency bittorrent-lsd to v2 ([#90](https://github.com/webtorrent/torrent-discovery/issues/90)) ([e2e44a5](https://github.com/webtorrent/torrent-discovery/commit/e2e44a5813fd6e25b8498cd46b16d7fb8e3a82db))
+* **deps:** update dependency bittorrent-tracker to v10 ([#91](https://github.com/webtorrent/torrent-discovery/issues/91)) ([eb664bb](https://github.com/webtorrent/torrent-discovery/commit/eb664bb42c82afd8a71f1b6c379f0f58e4de9ea3))
+
 # [10.0.0](https://github.com/webtorrent/torrent-discovery/compare/v9.4.15...v10.0.0) (2022-12-06)
 
 
