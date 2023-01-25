@@ -1,9 +1,9 @@
 /*! torrent-discovery. MIT License. WebTorrent LLC <https://webtorrent.io/opensource> */
 import Debug from 'debug'
-import DHT from 'bittorrent-dht/client.js' // empty object in browser
+import { Client as DHT } from 'bittorrent-dht' // empty object in browser
 import { EventEmitter } from 'events'
 import parallel from 'run-parallel'
-import Tracker from 'bittorrent-tracker/client.js'
+import { Client as Tracker } from 'bittorrent-tracker'
 import LSD from 'bittorrent-lsd'
 
 const debug = Debug('torrent-discovery')
