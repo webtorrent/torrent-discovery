@@ -1,3 +1,10 @@
+## [10.0.2](https://github.com/webtorrent/torrent-discovery/compare/v10.0.1...v10.0.2) (2023-01-25)
+
+
+### Bug Fixes
+
+* imports ([#94](https://github.com/webtorrent/torrent-discovery/issues/94)) ([9187ba2](https://github.com/webtorrent/torrent-discovery/commit/9187ba2de2d22809432db1de4875ae4987479df3))
+
 ## [10.0.1](https://github.com/webtorrent/torrent-discovery/compare/v10.0.0...v10.0.1) (2023-01-24)
 
 
