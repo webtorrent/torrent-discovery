@@ -1,3 +1,10 @@
+## [10.0.9](https://github.com/webtorrent/torrent-discovery/compare/v10.0.8...v10.0.9) (2023-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency bittorrent-tracker to ^10.0.6 ([e65efce](https://github.com/webtorrent/torrent-discovery/commit/e65efcec6963ea9494c4ff0e650e5bc85cd46baf))
+
 ## [10.0.8](https://github.com/webtorrent/torrent-discovery/compare/v10.0.7...v10.0.8) (2023-05-26)
 
 
