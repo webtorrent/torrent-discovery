@@ -18,7 +18,7 @@
   "type": "module",
   "dependencies": {
     "bittorrent-dht": "^11.0.4",
-    "bittorrent-tracker": "^10.0.9",
+    "bittorrent-tracker": "^10.0.10",
     "bittorrent-lsd": "^2.0.0",
     "debug": "^4.3.4",
     "run-parallel": "^1.2.0"
