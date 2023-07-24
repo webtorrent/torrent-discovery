@@ -24,7 +24,7 @@
     "run-parallel": "^1.2.0"
   },
   "devDependencies": {
-    "@webtorrent/semantic-release-config": "1.0.9",
+    "@webtorrent/semantic-release-config": "1.0.10",
     "randombytes": "2.1.0",
     "semantic-release": "21.0.7",
     "standard": "*",
