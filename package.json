@@ -46,7 +46,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=12.20.0"
+    "node": ">=16.0.0"
   },
   "exports": {
     "import": "./index.js"
