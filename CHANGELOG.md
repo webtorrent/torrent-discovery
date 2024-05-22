@@ -1,3 +1,10 @@
+## [11.0.4](https://github.com/webtorrent/torrent-discovery/compare/v11.0.3...v11.0.4) (2024-05-22)
+
+
+### Bug Fixes
+
+* bump bittorrent-tracker ([#137](https://github.com/webtorrent/torrent-discovery/issues/137)) ([ddfc205](https://github.com/webtorrent/torrent-discovery/commit/ddfc205cdc36b7cfacf308bbb89e59eac8abae04))
+
 ## [11.0.3](https://github.com/webtorrent/torrent-discovery/compare/v11.0.2...v11.0.3) (2024-05-22)
 
 
