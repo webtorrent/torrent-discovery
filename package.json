@@ -20,7 +20,7 @@
     "bittorrent-dht": "^11.0.5",
     "bittorrent-tracker": "^11.1.0",
     "bittorrent-lsd": "^2.0.0",
-    "debug": "^4.3.4",
+    "debug": "^4.3.5",
     "run-parallel": "^1.2.0"
   },
   "devDependencies": {
