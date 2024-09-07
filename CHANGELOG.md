@@ -1,3 +1,10 @@
+## [11.0.10](https://github.com/webtorrent/torrent-discovery/compare/v11.0.9...v11.0.10) (2024-09-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency debug to ^4.3.7 ([8a02f93](https://github.com/webtorrent/torrent-discovery/commit/8a02f938e3e8b6e5f151ced8e741043e20e981d3))
+
 ## [11.0.9](https://github.com/webtorrent/torrent-discovery/compare/v11.0.8...v11.0.9) (2024-08-13)
 
 
