@@ -1,3 +1,10 @@
+## [11.0.13](https://github.com/webtorrent/torrent-discovery/compare/v11.0.12...v11.0.13) (2024-12-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency bittorrent-dht to ^11.0.9 ([#152](https://github.com/webtorrent/torrent-discovery/issues/152)) ([8a5f2f1](https://github.com/webtorrent/torrent-discovery/commit/8a5f2f14cc2b588614ad3f60f9b0fdc9577d1230))
+
 ## [11.0.12](https://github.com/webtorrent/torrent-discovery/compare/v11.0.11...v11.0.12) (2024-12-07)
 
 
