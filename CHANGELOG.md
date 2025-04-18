@@ -1,3 +1,10 @@
+## [11.0.16](https://github.com/webtorrent/torrent-discovery/compare/v11.0.15...v11.0.16) (2025-04-18)
+
+
+### Bug Fixes
+
+* disable the entirety of bittorrent-dht, rather than just the client, due to esm.sh build issues. ([#155](https://github.com/webtorrent/torrent-discovery/issues/155)) ([83d0e5e](https://github.com/webtorrent/torrent-discovery/commit/83d0e5e310b0962f81eb3c66ec92026da7355a86))
+
 ## [11.0.15](https://github.com/webtorrent/torrent-discovery/compare/v11.0.14...v11.0.15) (2025-01-20)
 
 
