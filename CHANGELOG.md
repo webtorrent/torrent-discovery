@@ -1,3 +1,10 @@
+## [11.0.18](https://github.com/webtorrent/torrent-discovery/compare/v11.0.17...v11.0.18) (2025-09-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency bittorrent-tracker to ^11.2.2 ([#161](https://github.com/webtorrent/torrent-discovery/issues/161)) ([12f298c](https://github.com/webtorrent/torrent-discovery/commit/12f298c52b7cc89ab907c35817e262560ad490ca))
+
 ## [11.0.17](https://github.com/webtorrent/torrent-discovery/compare/v11.0.16...v11.0.17) (2025-05-14)
 
 
