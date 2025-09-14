@@ -17,7 +17,7 @@
   },
   "type": "module",
   "dependencies": {
-    "bittorrent-dht": "^11.0.10",
+    "bittorrent-dht": "^11.0.11",
     "bittorrent-tracker": "^11.2.2",
     "bittorrent-lsd": "^2.0.0",
     "debug": "^4.4.1",
