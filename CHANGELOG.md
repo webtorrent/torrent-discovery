@@ -1,3 +1,10 @@
+## [11.0.21](https://github.com/webtorrent/torrent-discovery/compare/v11.0.20...v11.0.21) (2026-05-25)
+
+
+### Bug Fixes
+
+* **deps:** update webtorrent ([#179](https://github.com/webtorrent/torrent-discovery/issues/179)) ([fc6cd77](https://github.com/webtorrent/torrent-discovery/commit/fc6cd77ef93350002f0a748d12d6c7afb7bc1a40))
+
 ## [11.0.20](https://github.com/webtorrent/torrent-discovery/compare/v11.0.19...v11.0.20) (2026-05-25)
 
 
