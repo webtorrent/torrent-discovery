@@ -1,3 +1,10 @@
+## [11.0.20](https://github.com/webtorrent/torrent-discovery/compare/v11.0.19...v11.0.20) (2026-05-25)
+
+
+### Bug Fixes
+
+* **ci:** update release.yml to include permissions ([9006b98](https://github.com/webtorrent/torrent-discovery/commit/9006b987da8020897aa82774639ba20356b9e14e))
+
 ## [11.0.19](https://github.com/webtorrent/torrent-discovery/compare/v11.0.18...v11.0.19) (2025-09-14)
 
 
