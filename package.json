@@ -26,7 +26,7 @@
   "devDependencies": {
     "@webtorrent/semantic-release-config": "1.0.11",
     "randombytes": "2.1.0",
-    "semantic-release": "25.0.6",
+    "semantic-release": "25.0.7",
     "standard": "*",
     "tape": "5.10.2"
   },
