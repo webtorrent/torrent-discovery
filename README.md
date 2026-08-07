@@ -1,12 +1,19 @@
 # torrent-discovery [![ci][ci-image]][ci-url] [![npm][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url] [![javascript style guide][standard-image]][standard-url]
 
 [ci-image]: https://github.com/webtorrent/torrent-discovery/actions/workflows/ci.yml/badge.svg
+
 [ci-url]: https://github.com/webtorrent/torrent-discovery/actions/workflows/ci.yml
+
 [npm-image]: https://img.shields.io/npm/v/torrent-discovery.svg
+
 [npm-url]: https://npmjs.org/package/torrent-discovery
+
 [downloads-image]: https://img.shields.io/npm/dm/torrent-discovery.svg
+
 [downloads-url]: https://npmjs.org/package/torrent-discovery
+
 [standard-image]: https://img.shields.io/badge/code_style-standard-brightgreen.svg
+
 [standard-url]: https://standardjs.com
 
 ### Discover BitTorrent and WebTorrent peers
@@ -15,10 +22,10 @@ This module bundles [bittorrent-tracker](https://www.npmjs.com/package/bittorren
 
 ## features
 
-- simple API
-- find peers from trackers, DHT, and LSD
-- automatically announces, so other peers can discover us
-- can start finding peers with just an info hash, before full metadata is available
+* simple API
+* find peers from trackers, DHT, and LSD
+* automatically announces, so other peers can discover us
+* can start finding peers with just an info hash, before full metadata is available
 
 This module also **works in the browser** with [browserify](http://browserify.org). In
 that context, it discovers [WebTorrent](http://webtorrent.io) (WebRTC) peers.
@@ -39,7 +46,8 @@ Create a new peer discovery instance. Required options are:
 {
   infoHash: '', // as hex string or Buffer
   peerId: '',   // as hex string or Buffer
-  port: 0       // torrent client port (only required in node)
+  port: 0,       // torrent client port (only required in node)
+  host: '0.0.0.0' // torrent client host or network interface to bind to
 }
 ```
 
