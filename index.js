@@ -23,6 +23,7 @@ class Discovery extends EventEmitter {
       ? opts.infoHash.toLowerCase()
       : opts.infoHash.toString('hex')
     this._port = opts.port // torrent port
+    this._host = opts.host
     this._userAgent = opts.userAgent // User-Agent header for http requests
 
     this.destroyed = false
@@ -58,7 +59,7 @@ class Discovery extends EventEmitter {
       const dht = new DHT(opts)
       dht.on('warning', this._onWarning)
       dht.on('error', this._onError)
-      dht.listen(port)
+      dht.listen(port, this._host)
       this._internalDHT = true
       return dht
     }
@@ -169,6 +170,7 @@ class Discovery extends EventEmitter {
       announce: this._announce,
       peerId: this.peerId,
       port: this._port,
+      host: this._host,
       userAgent: this._userAgent
     })
 
@@ -209,7 +211,8 @@ class Discovery extends EventEmitter {
     const opts = Object.assign({}, {
       infoHash: this.infoHash,
       peerId: this.peerId,
-      port: this._port
+      port: this._port,
+      host: this._host
     })
 
     const lsd = new LSD(opts)
